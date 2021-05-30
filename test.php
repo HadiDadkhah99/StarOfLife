@@ -19,4 +19,5 @@ class test extends DataModel
 
 
 $d = new DataBaseManager("localhost", "root", "mm", "");
+
 echo json_encode($d->delete(new test(1)));
