@@ -1,4 +1,5 @@
 <?php
+require_once 'StarOfLife.php';
 
 class DataBaseManager
 {
@@ -17,18 +18,36 @@ class DataBaseManager
      * Insert new data (send object of DataModel)
      * returned data is last inserted id
      */
-    public function insert(DataModel $dataModel): int
+    public function insert(DataModel $dataModel, WhereQuery $whereQuery = null): int
     {
+        $where = "";
+
+        //check where
+        if (!empty($whereQuery))
+            $where = "WHERE " . $whereQuery->getWhereQuery();
+
 
         //prepare statement
-        $statement = $this->pdo->prepare("INSERT INTO {$dataModel->name()} ({$this->dataBaseHelper->classifyModel($dataModel)})VALUES({$this->dataBaseHelper->pdoClassifyModel($dataModel)})");
+        $statement = $this->pdo->prepare("INSERT INTO {$dataModel->name()} ({$this->dataBaseHelper->classifyVarsName($dataModel,true)})VALUES({$this->dataBaseHelper->classifyPdoVarsName($dataModel,true)}) $where");
+
+        var_dump($statement->queryString);
 
         //**classify variables (bind param(:d0,$var)
-        $vars = $this->dataBaseHelper->classifyPrepareStatement($dataModel);
+        $vars = $this->dataBaseHelper->classifyPdoStatement($dataModel, true);
+
 
         //set variables
-        foreach ($vars as $key => $var)
+        foreach ($vars as $key => &$var)
             $statement->bindParam($key, $var);
+
+
+
+        //set where vars
+        if (!empty($whereQuery)) {
+            foreach ($whereQuery->getVars() as $key => $var)
+                $statement->bindParam($key, $var);
+        }
+
 
         //run query
         $statement->execute();
@@ -41,21 +60,38 @@ class DataBaseManager
      * Update data (send object of DataModel)
      * Please set id for data model object (Primary Key)
      */
-    public function update(DataModel $dataModel, string $whereQuery = null): bool
+    public function update(DataModel $dataModel, WhereQuery $whereQuery = null): bool
     {
-        //check where query
-        if (empty($whereQuery))
-            $whereQuery = "id={$dataModel->id}";
+        $where = "";
+
+        //check where
+        if (!empty($whereQuery))
+            $where = "WHERE " . $whereQuery->getWhereQuery();
+        else
+            $where = "WHERE id=$dataModel->id";
 
         //prepare statement
-        $statement = $this->pdo->prepare("UPDATE {$dataModel->name()} SET {$this->dataBaseHelper->classifySetVar($dataModel)} WHERE $whereQuery");
+        $statement = $this->pdo->prepare("UPDATE {$dataModel->name()} SET {$this->dataBaseHelper->classifyPdoSetVars($dataModel,true)} $where");
+
+        var_dump($statement->queryString);
 
         //**classify variables (bind param(:d0,$var)
-        $vars = $this->dataBaseHelper->classifyPrepareStatement($dataModel);
+        $vars = $this->dataBaseHelper->classifyPdoStatement($dataModel, true);
+
+        var_dump($vars);
 
         //set variables
-        foreach ($vars as $key => $var)
+        foreach ($vars as $key => $var) {
+            echo "<br>";
+            echo $key . "=>" . $var;
             $statement->bindParam($key, $var);
+        }
+
+        //set where vars
+        if (!empty($whereQuery)) {
+            foreach ($whereQuery->getVars() as $key => $var)
+                $statement->bindParam($key, $var);
+        }
 
         //run query
         return $statement->execute();
@@ -66,15 +102,23 @@ class DataBaseManager
      * Delete data (send object of DataModel)
      * Please set id for data model object (Primary Key)
      */
-    public function delete(DataModel $dataModel, string $whereQuery = null): bool
+    public function delete(DataModel $dataModel, WhereQuery $whereQuery = null): bool
     {
 
-        //check where query
-        if (empty($whereQuery))
-            $whereQuery = "id={$dataModel->id}";
+        $where = "";
+
+        //check where
+        if (!empty($whereQuery))
+            $where = "WHERE " . $whereQuery->getWhereQuery();
 
         //prepare statement
-        $statement = $this->pdo->prepare("DELETE FROM {$dataModel->name()} WHERE $whereQuery");
+        $statement = $this->pdo->prepare("DELETE FROM {$dataModel->name()} $where");
+
+        //set where vars
+        if (!empty($whereQuery)) {
+            foreach ($whereQuery->getVars() as $key => $var)
+                $statement->bindParam($key, $var);
+        }
 
         //run query
         return $statement->execute();
@@ -86,15 +130,24 @@ class DataBaseManager
      * Please set id for data model object (Primary Key)
      * The returned data is object of DataModel (if data is not in DataBase so the returned data is null)
      */
-    public function get(DataModel $dataModel, string $whereQuery = null): ?DataModel
+    public function get(DataModel $dataModel, WhereQuery $whereQuery = null): ?DataModel
     {
 
-        //check where query
-        if (empty($whereQuery))
-            $whereQuery = "id={$dataModel->id}";
+        $where = "";
+
+        //check where
+        if (!empty($whereQuery))
+            $where = "WHERE " . $whereQuery->getWhereQuery();
 
         //prepare statement
-        $statement = $this->pdo->prepare("SELECT * FROM {$dataModel->name()} WHERE $whereQuery");
+        $statement = $this->pdo->prepare("SELECT * FROM {$dataModel->name()} $where");
+
+        //set where vars
+        if (!empty($whereQuery)) {
+            foreach ($whereQuery->getVars() as $key => $var)
+                $statement->bindParam($key, $var);
+        }
+
 
         //run query
         $statement->execute();
@@ -129,14 +182,23 @@ class DataBaseManager
      * Get all data
      * The returned data is array of DataModel (if data is not in DataBase so the returned data is null)
      */
-    public function getAll(string $className, string $whereQuery = null): ?array
+    public function getAll(string $className, WhereQuery $whereQuery = null): ?array
     {
-        //check where query
+        $where = "";
+
+        //check where
         if (!empty($whereQuery))
-            $whereQuery = "WHERE $whereQuery";
+            $where = "WHERE " . $whereQuery->getWhereQuery();
 
         //prepare statement
-        $statement = $this->pdo->prepare("SELECT * FROM $className $whereQuery");
+        $statement = $this->pdo->prepare("SELECT * FROM $className $where");
+
+        //set where vars
+        if (!empty($whereQuery)) {
+            foreach ($whereQuery->getVars() as $key => $var)
+                $statement->bindParam($key, $var);
+        }
+
         //run query
         $statement->execute();
         //get all data

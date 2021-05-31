@@ -1,23 +1,37 @@
 <?php
-require_once './DataModel.php';
-require_once './DataBaseHelper.php';
-require_once './DataBaseManager.php';
+require_once './StarOfLife.php';
+start("localhost", "root", "mm", "");
 
 class test extends DataModel
 {
 
-    public $name  ;
-    public $wallet ;
-    public $weight ;
+    /**
+     * @PRIMARY_KEY @AUTO_INCREMENT
+     *
+     */
+    public ?int $id;
 
-    public function __construct(int $id)
-    {
-        parent::__construct($id);
-    }
+
+    public $name = "";
+    public $wallet;
+    public $weight;
+
+
+
+
 
 }
 
+$o = new test(null);
+$o->name = "hadi";
+$o->wallet = 56;
+$o->weight = 2342;
+$o->id = 5;
 
-$d = new DataBaseManager("localhost", "root", "mm", "");
+$w=new WhereQuery();
 
-echo json_encode($d->delete(new test(1)));
+insert($o);
+
+
+//$dh = new DataBaseHelper(new DataBaseManager("localhost", "root", "mm", ""));
+//var_dump($dh->classifyVarsName($o, true));

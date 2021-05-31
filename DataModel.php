@@ -3,12 +3,29 @@
 
 class DataModel
 {
-    //primary key
-    public int $id;
+    /**
+     * @PRIMARY_KEY @AUTO_INCREMENT
+     *
+     */
+    public ?int $id;
 
-    public function __construct(int $id)
+    public function __construct(?int $id)
     {
         $this->id = $id;
+    }
+
+
+    public function varAnnotation(string $varName): ?string
+    {
+
+        try {
+
+            $r = new ReflectionProperty($this, $varName);
+            return is_string($r->getDocComment()) ? $r->getDocComment() : null;
+
+        } catch (Exception $e) {
+        }
+        return null;
     }
 
     /**
