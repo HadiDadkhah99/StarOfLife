@@ -7,9 +7,9 @@ class DataBaseManager
     private PDO $pdo;
     private DataBaseHelper $dataBaseHelper;
 
-    public function __construct(string $host, string $username, string $dbName, string $passWord)
+    public function __construct(string $host, string $username, string $dbName, string $passWord, string $charset = "utf8")
     {
-        $this->pdo = new PDO("mysql:host=$host;dbname=$dbName;charset=utf8", $username, $passWord);
+        $this->pdo = new PDO("mysql:host=$host;dbname=$dbName;charset=$charset", $username, $passWord);
         $this->dataBaseHelper = new DataBaseHelper($this);
     }
 
@@ -29,8 +29,6 @@ class DataBaseManager
 
         //prepare statement
         $statement = $this->pdo->prepare("INSERT INTO {$dataModel->name()} ({$this->dataBaseHelper->classifyVarsName($dataModel,true)})VALUES({$this->dataBaseHelper->classifyPdoVarsName($dataModel,true)}) $where");
-
-        var_dump($statement->queryString);
 
         //**classify variables (bind param(:d0,$var)
         $vars = $this->dataBaseHelper->classifyPdoStatement($dataModel, true);
@@ -66,7 +64,8 @@ class DataBaseManager
         if (!empty($whereQuery))
             $where = "WHERE " . $whereQuery->getWhereQuery();
         else
-            $where = "WHERE id=$dataModel->id";
+            $where = "WHERE {$dataModel->getPrimaryKeyName()}={$dataModel->getPrimaryKeyValue()}";
+
 
         //prepare statement
         $statement = $this->pdo->prepare("UPDATE {$dataModel->name()} SET {$this->dataBaseHelper->classifyPdoSetVars($dataModel,true)} $where");
@@ -102,7 +101,8 @@ class DataBaseManager
         if (!empty($whereQuery))
             $where = "WHERE " . $whereQuery->getWhereQuery();
         else
-            $where = "WHERE id=$dataModel->id";
+            $where = "WHERE {$dataModel->getPrimaryKeyName()}={$dataModel->getPrimaryKeyValue()}";
+
 
         //prepare statement
         $statement = $this->pdo->prepare("DELETE FROM {$dataModel->name()} $where");
@@ -130,7 +130,8 @@ class DataBaseManager
         if (!empty($whereQuery))
             $where = "WHERE " . $whereQuery->getWhereQuery();
         else
-            $where = "WHERE id=$dataModel->id";
+            $where = "WHERE {$dataModel->getPrimaryKeyName()}={$dataModel->getPrimaryKeyValue()}";
+
 
         //prepare statement
         $statement = $this->pdo->prepare("SELECT * FROM {$dataModel->name()} $where");
@@ -187,11 +188,14 @@ class DataBaseManager
         //prepare statement
         $statement = $this->pdo->prepare("SELECT * FROM $className $where");
 
+
         //set where vars
         if (!empty($whereQuery)) {
-            foreach ($whereQuery->getVars() as $key => $var)
+            foreach ($whereQuery->getVars() as $key => &$var)
                 $statement->bindParam($key, $var);
+
         }
+
 
         //run query
         $statement->execute();

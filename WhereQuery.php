@@ -12,8 +12,10 @@ class WhereQuery
      */
     public function equal(string $var, $value): WhereQuery
     {
-        $this->whereQuery .= " $var=:$var ";
-        $this->vars[":$var"] = $value;
+        $e = strpos($var, ".") ? explode(".", $var)[1] : $var;
+
+        $this->whereQuery .= " $var=:$e ";
+        $this->vars[":$e"] = $value;
 
         return $this;
     }
@@ -23,8 +25,39 @@ class WhereQuery
      */
     public function notEqual(string $var, $value): WhereQuery
     {
-        $this->whereQuery .= " NOT $var=:$var ";
-        $this->vars[":$var"] = $value;
+        $e = strpos($var, ".") ? explode(".", $var)[1] : $var;
+
+        $this->whereQuery .= " NOT $var=:$e ";
+        $this->vars[":$e"] = $value;
+
+        return $this;
+    }
+
+
+    /**
+     * @param bool $orEqual
+     * @param int|float $value
+     */
+    public function greatThan(string $var, $value, bool $orEqual = false): WhereQuery
+    {
+        $e = strpos($var, ".") ? explode(".", $var)[1] : $var;
+
+        $this->whereQuery .= $orEqual ? " $var>=:$e " : " $var>:$e ";
+        $this->vars[":$e"] = $value;
+
+        return $this;
+    }
+
+    /**
+     * @param bool $orEqual
+     * @param int|float $value
+     */
+    public function lessThan(string $var, $value, bool $orEqual = false): WhereQuery
+    {
+        $e = strpos($var, ".") ? explode(".", $var)[1] : $var;
+
+        $this->whereQuery .= $orEqual ? " $var<=:$e " : " $var<:$e ";
+        $this->vars[":$e"] = $value;
 
         return $this;
     }
@@ -37,14 +70,14 @@ class WhereQuery
         return $this;
     }
 
-    public function OR(): WhereQuery
+    public function or(): WhereQuery
     {
         $this->whereQuery .= " OR ";
 
         return $this;
     }
 
-    public function NOT(): WhereQuery
+    public function not(): WhereQuery
     {
         $this->whereQuery .= " NOT ";
         return $this;
@@ -52,9 +85,11 @@ class WhereQuery
 
     public function orderBy(string $var, bool $order = true): WhereQuery
     {
+        $e = strpos($var, ".") ? explode(".", $var)[1] : $var;
+
         $AD = $order ? "ASC" : "DESC";
 
-        $this->whereQuery .= " ORDER BY $var $AD ";
+        $this->whereQuery .= " ORDER BY $e $AD ";
 
         return $this;
     }
@@ -66,6 +101,7 @@ class WhereQuery
 
         return $this;
     }
+
 
     public function setWhereQuery(string $whereQuery): void
     {

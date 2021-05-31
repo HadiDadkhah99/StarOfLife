@@ -3,10 +3,7 @@
 
 class DataModel
 {
-    /**
-     * @PRIMARY_KEY @AUTO_INCREMENT
-     *
-     */
+    /** @PRIMARY_KEY @AUTO_INCREMENT */
     public ?int $id;
 
     public function __construct(?int $id)
@@ -14,6 +11,13 @@ class DataModel
         $this->id = $id;
     }
 
+    /**
+     * @return int|null
+     */
+    public function id(): ?int
+    {
+        return $this->id;
+    }
 
     public function varAnnotation(string $varName): ?string
     {
@@ -65,6 +69,36 @@ class DataModel
     public function getAllVars(): array
     {
         return get_object_vars($this);
+    }
+
+    /**
+     * Find Primary Key
+     */
+    public function getPrimaryKeyName(): ?string
+    {
+
+        foreach ($this->getAllVars() as $key => $value) {
+
+            if (strpos($this->varAnnotation($key), Annotation::PRIMARY_KAY))
+                return $key;
+        }
+
+        return null;
+    }
+
+    /**
+     * Find Primary Key Value
+     */
+    public function getPrimaryKeyValue(): ?string
+    {
+
+        foreach ($this->getAllVars() as $key => $value) {
+
+            if (strpos($this->varAnnotation($key), Annotation::PRIMARY_KAY))
+                return is_string($value) ? "'$value'" : $value;
+        }
+
+        return null;
     }
 
 

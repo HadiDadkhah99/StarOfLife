@@ -51,7 +51,7 @@ function getAll(DataModel $dataModel, WhereQuery $whereQuery = null): ?array
     return $dataBase->getAll($dataModel->name(), $whereQuery);
 }
 
-function start(string $host, string $userName, string $dbName, string $passWord)
+function start(string $dbName, string $userName, string $passWord, string $host = "localhost", string $charset = "utf8")
 {
     require_once dirname(__DIR__) . '/StarOfLife/DataModel.php';
     require_once dirname(__DIR__) . '/StarOfLife/WhereQuery.php';
@@ -60,6 +60,6 @@ function start(string $host, string $userName, string $dbName, string $passWord)
     require_once dirname(__DIR__) . '/StarOfLife/DataBaseManager.php';
 
     global $dataBase;
-    $dataBase = new DataBaseManager($host, $userName, $dbName, $passWord);
+    $dataBase = new DataBaseManager($host, $userName, $dbName, $passWord, $charset);
 
 }

@@ -1,15 +1,9 @@
 <?php
 require_once './StarOfLife.php';
-start("localhost", "root", "mm", "");
+start("mm", "root", "");
 
 class test extends DataModel
 {
-
-    /**
-     * @PRIMARY_KEY @AUTO_INCREMENT
-     *
-     */
-    public ?int $id;
 
 
     public $name = "";
@@ -23,12 +17,13 @@ $o = new test(null);
 $o->name = "ever";
 $o->wallet = 654321;
 $o->weight = 123456;
-$o->id = 77;
+$o->id = 44;
 
-$w=new WhereQuery();
-$w->NOT()->equal('id',$o->id);
+$w = new WhereQuery();
+$w->greatThan('id', 74,true);
 
 
 echo json_encode(getAll($o,$w));
+
 
 
