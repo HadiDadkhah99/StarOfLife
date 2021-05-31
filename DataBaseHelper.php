@@ -74,13 +74,13 @@ class DataBaseHelper
         $length = count($vars);
 
         //set data
-        $i = 1;
+        $i = 0;
         foreach ($vars as $key => $value) {
 
             if ($withAnnotation and (strpos($dataModel->varAnnotation($key), Annotation::IGNORE) or strpos($dataModel->varAnnotation($key), Annotation::AUTO_INCREMENT)))
                 continue;
 
-            if ($i == 1)
+            if ($i == 0)
                 $res .= ":d$i";
             else
                 $res .= ",:d$i";
@@ -106,7 +106,7 @@ class DataBaseHelper
         $classVars = $dataModel->getAllVars();
 
         //index
-        $i = 1;
+        $i = 0;
         //set data
         foreach ($classVars as $key => $var) {
 

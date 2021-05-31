@@ -17,21 +17,18 @@ class test extends DataModel
     public $weight;
 
 
-
-
-
 }
 
 $o = new test(null);
-$o->name = "hadi";
-$o->wallet = 56;
-$o->weight = 2342;
-$o->id = 5;
+$o->name = "ever";
+$o->wallet = 654321;
+$o->weight = 123456;
+$o->id = 77;
 
 $w=new WhereQuery();
+$w->NOT()->equal('id',$o->id);
 
-insert($o);
+
+echo json_encode(getAll($o,$w));
 
 
-//$dh = new DataBaseHelper(new DataBaseManager("localhost", "root", "mm", ""));
-//var_dump($dh->classifyVarsName($o, true));

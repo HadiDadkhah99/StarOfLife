@@ -29,6 +29,7 @@ class WhereQuery
         return $this;
     }
 
+
     public function and(): WhereQuery
     {
         $this->whereQuery .= " AND ";
@@ -40,6 +41,12 @@ class WhereQuery
     {
         $this->whereQuery .= " OR ";
 
+        return $this;
+    }
+
+    public function NOT(): WhereQuery
+    {
+        $this->whereQuery .= " NOT ";
         return $this;
     }
 
