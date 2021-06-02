@@ -6,24 +6,36 @@ class test extends DataModel
 {
 
 
-    public $name = "";
+    public $name;
     public $wallet;
     public $weight;
 
 
 }
 
-$o = new test(null);
-$o->name = "ever";
-$o->wallet = 654321;
-$o->weight = 123456;
-$o->id = 44;
-
-$w = new WhereQuery();
-$w->greatThan('id', 74,true);
+class car extends DataModel
+{
 
 
-echo json_encode(getAll($o,$w));
+    public $user_id;
+    public $name;
 
 
+}
 
+class join extends DataModel
+{
+
+
+    public $name;
+    public $wallet;
+    public $weight;
+    public $user_id;
+
+}
+
+$t = new test(87);
+$c = new car();
+
+
+echo json_encode(getAll(new test()));

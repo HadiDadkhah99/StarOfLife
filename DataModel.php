@@ -6,7 +6,7 @@ class DataModel
     /** @PRIMARY_KEY @AUTO_INCREMENT */
     public ?int $id;
 
-    public function __construct(?int $id)
+    public function __construct(?int $id=null)
     {
         $this->id = $id;
     }

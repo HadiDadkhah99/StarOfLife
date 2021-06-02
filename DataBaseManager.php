@@ -123,14 +123,13 @@ class DataBaseManager
      * Please set id for data model object (Primary Key)
      * The returned data is object of DataModel (if data is not in DataBase so the returned data is null)
      */
-    public function get(DataModel $dataModel, WhereQuery $whereQuery = null): ?DataModel
+    public function get(DataModel $dataModel, DataModel $returnModel, WhereQuery $whereQuery = null): ?DataModel
     {
 
-        //check where
         if (!empty($whereQuery))
-            $where = "WHERE " . $whereQuery->getWhereQuery();
+            $where = " {$whereQuery->getWhereQuery()} ";
         else
-            $where = "WHERE {$dataModel->getPrimaryKeyName()}={$dataModel->getPrimaryKeyValue()}";
+            $where = " WHERE {$dataModel->name()}.{$dataModel->getPrimaryKeyName()} = {$dataModel->getPrimaryKeyValue()} ";
 
 
         //prepare statement
@@ -141,6 +140,7 @@ class DataBaseManager
             foreach ($whereQuery->getVars() as $key => &$var)
                 $statement->bindParam($key, $var);
         }
+
 
 
         //run query
@@ -154,7 +154,7 @@ class DataBaseManager
         if (is_array($data)) {
 
             //get data model class name
-            $classname = $dataModel->name();
+            $classname = $returnModel->name();
             //create new object of data model class
             $object = new $classname($dataModel->id);
 
@@ -162,7 +162,7 @@ class DataBaseManager
             $reflectionClass = new ReflectionClass($classname);
 
             //set vars
-            foreach ($dataModel->getAllVars() as $key => $var)
+            foreach ($returnModel->getAllVars() as $key => $var)
                 $reflectionClass->getProperty($key)->setValue($object, $data[$key]);
 
             //return data
@@ -176,14 +176,14 @@ class DataBaseManager
      * Get all data
      * The returned data is array of DataModel (if data is not in DataBase so the returned data is null)
      */
-    public function getAll(string $className, WhereQuery $whereQuery = null): ?array
+    public function getAll(string $className, DataModel $returnModel, WhereQuery $whereQuery = null): ?array
     {
 
-        //check where
         if (!empty($whereQuery))
-            $where = "WHERE " . $whereQuery->getWhereQuery();
+            $where = $whereQuery->getWhereQuery();
         else
             $where = "";
+
 
         //prepare statement
         $statement = $this->pdo->prepare("SELECT * FROM $className $where");
@@ -193,14 +193,15 @@ class DataBaseManager
         if (!empty($whereQuery)) {
             foreach ($whereQuery->getVars() as $key => &$var)
                 $statement->bindParam($key, $var);
-
         }
+
 
 
         //run query
         $statement->execute();
         //get all data
         $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+
 
         //check data is not empty
         if (is_array($data)) {
@@ -210,10 +211,10 @@ class DataBaseManager
 
             foreach ($data as $res) {
                 //create object off DataModel class name
-                $object = new $className(intval($res['id']));
+                $object = new $returnModel (intval($res['id']));
 
                 //reflection for set data for all of class vars
-                $reflectionClass = new ReflectionClass($className);
+                $reflectionClass = new ReflectionClass($returnModel->name());
 
                 //set vars
                 foreach ($object->getAllVars() as $key => $var)

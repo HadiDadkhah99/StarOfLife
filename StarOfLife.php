@@ -35,20 +35,21 @@ function delete(DataModel $dataModel, WhereQuery $whereQuery = null): int
 /**
  * Get Special data of DataBase
  */
-function get(DataModel $dataModel, WhereQuery $whereQuery = null): ?DataModel
+function get(DataModel $dataModel, WhereQuery $whereQuery = null, DataModel $returnModel = null): ?DataModel
 {
     global $dataBase;
-    return $dataBase->get($dataModel, $whereQuery);
+    return $dataBase->get($dataModel, $returnModel, $whereQuery);
 }
 
 /**
  * Get all data of DataBase
- *
+ * @param DataModel|null $returnModel
  */
-function getAll(DataModel $dataModel, WhereQuery $whereQuery = null): ?array
+function getAll(DataModel $dataModel, WhereQuery $whereQuery = null, DataModel $returnModel = null): ?array
 {
     global $dataBase;
-    return $dataBase->getAll($dataModel->name(), $whereQuery);
+    $returnModel = empty($returnModel) ? $dataModel : $returnModel;
+    return $dataBase->getAll($dataModel->name(), $returnModel, $whereQuery);
 }
 
 function start(string $dbName, string $userName, string $passWord, string $host = "localhost", string $charset = "utf8")
