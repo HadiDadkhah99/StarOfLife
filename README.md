@@ -60,3 +60,36 @@ update($user);
 
 ?>
 ```
+
+## If you have another Primary Key try this way
+
+```php
+<?php
+require_once '../StarOfLife.php';
+start("dbName", "userName", "password");
+
+class UserTable extends DataModel
+{
+    //Default Primary Key
+    /** @IGNORE */
+    public ?int $id;
+
+    //custom primary key
+    /** @PRIMARY_KEY @AUTO_INCREMENT */
+    public $my_key;
+    //user name
+    public $name;
+    //user wallet
+    public $wallet;
+
+}
+
+$user = new UserTable();
+$user->my_key = 87;
+$user->name = "Hadi";
+$user->wallet = 5000;
+
+update($user);
+
+?>
+```
