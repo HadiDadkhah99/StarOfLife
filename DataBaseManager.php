@@ -13,6 +13,40 @@ class DataBaseManager
         $this->dataBaseHelper = new DataBaseHelper($this);
     }
 
+    /**
+     * Run custom query
+     * @return bool|array
+     */
+    public function customQuery(string $query, array $inputVars, bool $isOutput)
+    {
+
+        //prepare sql query
+        $statement = $this->pdo->prepare($query);
+
+        //set vars
+        foreach ($inputVars as $key => &$var) {
+
+            if (is_int(strpos($key, ":")))
+                $statement->bindParam("$key", $var);
+
+            else
+                $statement->bindParam(":$key", $var);
+
+        }//end for
+
+        //exec query
+        if (!$isOutput) return $statement->execute();
+
+
+        $statement->execute();
+
+        $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+        if (is_array($data))
+            return count($data) == 1 ? $data[0] : $data;
+
+        return [];
+
+    }
 
     /**
      * Insert new data (send object of DataModel)
@@ -126,6 +160,9 @@ class DataBaseManager
     public function get(DataModel $dataModel, DataModel $returnModel, WhereQuery $whereQuery = null): ?DataModel
     {
 
+        //class name
+        $className = $dataModel->name();
+
         if (!empty($whereQuery))
             $where = " {$whereQuery->getWhereQuery()} ";
         else
@@ -133,7 +170,7 @@ class DataBaseManager
 
 
         //prepare statement
-        $statement = $this->pdo->prepare("SELECT * FROM {$dataModel->name()} $where");
+        $statement = $this->pdo->prepare("SELECT {$this->dataBaseHelper->getSelectionQuery(new $className,$whereQuery)} FROM {$dataModel->name()} $where");
 
         //set where vars
         if (!empty($whereQuery)) {
@@ -142,31 +179,19 @@ class DataBaseManager
         }
 
 
-
         //run query
         $statement->execute();
 
         //select data
-        $data = $statement->fetch(PDO::FETCH_ASSOC);
+        $res = $statement->fetch(PDO::FETCH_ASSOC);
 
 
         //check data is not empty
-        if (is_array($data)) {
-
-            //get data model class name
-            $classname = $returnModel->name();
-            //create new object of data model class
-            $object = new $classname($dataModel->id);
-
-            //reflection for set data for all of class vars
-            $reflectionClass = new ReflectionClass($classname);
-
-            //set vars
-            foreach ($returnModel->getAllVars() as $key => $var)
-                $reflectionClass->getProperty($key)->setValue($object, $data[$key]);
+        if (is_array($res)) {
 
             //return data
-            return $object;
+            return $this->setModelVars($className, $res, $returnModel, $whereQuery);
+
         }
 
         return null;
@@ -186,7 +211,7 @@ class DataBaseManager
 
 
         //prepare statement
-        $statement = $this->pdo->prepare("SELECT * FROM $className $where");
+        $statement = $this->pdo->prepare("SELECT {$this->dataBaseHelper->getSelectionQuery(new $className,$whereQuery)} FROM $className $where");
 
 
         //set where vars
@@ -194,7 +219,6 @@ class DataBaseManager
             foreach ($whereQuery->getVars() as $key => &$var)
                 $statement->bindParam($key, $var);
         }
-
 
 
         //run query
@@ -210,18 +234,9 @@ class DataBaseManager
             $resultData = [];
 
             foreach ($data as $res) {
-                //create object off DataModel class name
-                $object = new $returnModel (intval($res['id']));
-
-                //reflection for set data for all of class vars
-                $reflectionClass = new ReflectionClass($returnModel->name());
-
-                //set vars
-                foreach ($object->getAllVars() as $key => $var)
-                    $reflectionClass->getProperty($key)->setValue($object, $res[$key]);
 
                 //put on array
-                $resultData[] = $object;
+                $resultData[] = $this->setModelVars($className, $res, $returnModel, $whereQuery);
             }
 
             //return data
@@ -230,4 +245,44 @@ class DataBaseManager
 
         return null;
     }
+
+    function setModelVars(string $className, array $res, DataModel $returnModel, WhereQuery $whereQuery = null): DataModel
+    {
+        if (empty($whereQuery))
+            $whereQuery = new WhereQuery();
+
+        //create object off DataModel class name
+        $object = new $returnModel ();
+
+        //reflection for set data for all of class vars
+        $reflectionClass = new ReflectionClass($returnModel->name());
+
+        //set vars
+        foreach ($object->getAllVars() as $key => $var) {
+
+            //ignore columns
+            if (strpos($object->varAnnotation($key), Annotation::IGNORE))
+                continue;
+
+            if (!empty($columnName = $object->getVarColumn($key))) {
+
+                if (strpos($columnName, "."))
+                    $resKey = str_replace(".", "_", $columnName);
+                else
+                    $resKey = !empty($this->dataBaseHelper->findVarInClasses(new $className, $key)) ? "{$className}_{$columnName}" : "{$this->dataBaseHelper->findVarInClasses($whereQuery,$key)}_{$columnName}";
+
+            } else
+
+                $resKey = !empty($this->dataBaseHelper->findVarInClasses(new $className, $key)) ? "{$className}_{$key}" : "{$this->dataBaseHelper->findVarInClasses($whereQuery,$key)}_{$key}";
+
+
+            $reflectionClass->getProperty($key)->setValue($object, $res[$resKey]);
+
+
+        }
+
+        return $object;
+    }
+
+
 }

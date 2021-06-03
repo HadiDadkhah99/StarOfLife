@@ -22,12 +22,19 @@ class JoinQueryHelper
         return $this;
     }
 
+    public function leftJoin(DataModel $dataModel, string $as = null): JoinQueryHelper
+    {
+        $this->joinQuery .= empty($as) ? " LEFT JOIN {$dataModel->name()} ON " : " JOIN {$dataModel->name()} as $as ON ";
+
+        return $this;
+    }
+
     /**
      * @param string $var
      * @param $value mixed
      * @throws Exception
      */
-    public function onEqual(string $var, $value, bool $not=false): JoinQueryHelper
+    public function onEqual(string $var, $value, bool $not = false): JoinQueryHelper
     {
         if (!strpos($var, "."))
             throw new Exception("Err in set column name: please set var name like ( test_table.name )");

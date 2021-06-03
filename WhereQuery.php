@@ -9,6 +9,7 @@ class WhereQuery
     private bool $checkUseWhere = false;
     private string $whereQuery = "";
     private array $vars = [];
+    private array $joinedTables = [];
 
     //controller
     private WhereQueryController $controller;
@@ -171,7 +172,21 @@ class WhereQuery
      */
     public function join(DataModel $dataModel, string $as = null): JoinQueryHelper
     {
+        //add to joined tables
+        $this->joinedTables[] = $dataModel->name();
+
         return $this->joinQueryHelper->join($dataModel, $as);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function leftJoin(DataModel $dataModel, string $as = null): JoinQueryHelper
+    {
+        //add to joined tables
+        $this->joinedTables[] = $dataModel->name();
+
+        return $this->joinQueryHelper->leftJoin($dataModel, $as);
     }
 
     public function setWhereQuery(string $whereQuery): void
@@ -200,6 +215,14 @@ class WhereQuery
     public function setVars(array $vars): void
     {
         $this->vars = $vars;
+    }
+
+    /**
+     * @return array
+     */
+    public function getJoinedTables(): array
+    {
+        return $this->joinedTables;
     }
 
 }

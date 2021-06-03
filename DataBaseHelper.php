@@ -172,4 +172,98 @@ class DataBaseHelper
 
         return $res;
     }
+
+    /**
+     * Get selection query
+     */
+    private function getSelection(DataModel $dataModel, string $table = null): string
+    {
+        //set table name
+        $table = empty($table) ? $dataModel->name() : $table;
+        //result
+        $res = "";
+        //model vars
+        $vars = $dataModel->getAllVars();
+
+        foreach ($vars as $key => $value) {
+
+            if (!strpos($dataModel->varAnnotation($key), Annotation::IGNORE)) {
+
+                if (empty($res))
+                    $res .= " {$table}.{$key} as {$table}_{$key}";
+                else
+                    $res .= " , {$table}.{$key} as {$table}_{$key}";
+
+            }
+
+        }
+
+
+        return $res;
+    }
+
+    public function getSelectionQuery(DataModel $dataModel, WhereQuery $whereQuery = null): string
+    {
+        //check where query
+        if (empty($whereQuery))
+            return " {$this->getSelection($dataModel)} ";
+
+        //result
+        $res = "";
+
+        foreach ($whereQuery->getJoinedTables() as $table) {
+
+            /** @var  $object DataModel */
+            $object = new $table();
+
+            if (empty($res))
+                $res .= " {$this->getSelection($object)} ";
+            else
+                $res .= " , {$this->getSelection($object)} ";
+
+        }
+
+        if (empty($res))
+            $res = $this->getSelection($dataModel);
+        else
+            $res .= " , {$this->getSelection($dataModel)} ";
+
+
+        return $res;
+
+    }
+
+
+    /**
+     * @param $searchIn WhereQuery|DataModel
+     * @param string $var
+     * @return string|null
+     */
+    public function findVarInClasses($searchIn, string $var): ?string
+    {
+
+        if ($searchIn instanceof DataModel) {
+
+            $object = $searchIn;
+            if (in_array($var, $object->getAllVars_string()))
+                return $object->name();
+
+
+        } else if ($searchIn instanceof WhereQuery) {
+            $whereQuery = $searchIn;
+
+            foreach ($whereQuery->getJoinedTables() as $key => $class) {
+
+                /** @var  $object DataModel */
+                $object = new $class;
+                if (in_array($var, $object->getAllVars_string()))
+                    return $class;
+            }
+
+        }
+
+
+        return null;
+    }
+
 }

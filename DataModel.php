@@ -6,7 +6,7 @@ class DataModel
     /** @PRIMARY_KEY @AUTO_INCREMENT */
     public ?int $id;
 
-    public function __construct(?int $id=null)
+    public function __construct(?int $id = null)
     {
         $this->id = $id;
     }
@@ -30,6 +30,34 @@ class DataModel
         } catch (Exception $e) {
         }
         return null;
+    }
+
+
+    public function getVarColumn(string $varName): ?string
+    {
+
+        $r = new ReflectionProperty($this, $varName);
+
+        if (is_string($annotation = $r->getDocComment()) and strpos($annotation, Annotation::COLUMN))
+            return $this->getAnnotationValue($annotation, Annotation::COLUMN);
+
+
+        return null;
+    }
+
+    private function getAnnotationValue(string $annotation, string $annotationName): string
+    {
+        //space full remove
+        $a = str_replace(" ", "", $annotation);
+        //find index
+        $index = strpos($a, $annotationName) + strlen($annotationName);
+        //result
+        $val = '';
+        for ($i = $index + 1; $i < strlen($a) && $a[$i] != ')'; $i++)
+            $val .= $a[$i];
+
+
+        return $val;
     }
 
     /**
