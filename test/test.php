@@ -1,7 +1,9 @@
 <?php
 require_once '../StarOfLife.php';
+
+checkHeaderInputs(['Host']);
+
 start("mm", "root", "");
-checkGetInputs(['ifd']);
 
 class test extends DataModel
 {
@@ -44,4 +46,4 @@ $c = new car();
 $w = new WhereQuery();
 $j = new join();
 
-echo json_encode(query(" SELECT * FROM test  ", [':d' => 87]));
+echo json_encode(getAll($t));

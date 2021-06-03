@@ -4,6 +4,30 @@ class RequestChecker
 {
 
 
+    public static function checkHeaderInputs(array $inputs, bool $checkEmptyValue = true, bool $printErr = true): void
+    {
+
+
+        foreach ($inputs as $val) {
+
+            //if is not set key
+            if (!isset(getallheaders()[$val])) {
+                if ($printErr)
+                    echo json_encode(['error_type' => __FUNCTION__ . "()", 'message' => "The var name ($val) is not set in Header"], JSON_UNESCAPED_UNICODE);
+                die();
+            } //if is set key
+            else if (isset(getallheaders()[$val]) and $checkEmptyValue and empty(getallheaders()[$val])) {
+
+                if ($printErr)
+                    echo json_encode(['error_type' => __FUNCTION__, 'message' => "The var name ($val) is empty in Header"], JSON_UNESCAPED_UNICODE);
+                die();
+
+            }
+
+        }
+
+    }
+
 
     public static function checkGetInputs(array $inputs, bool $checkEmptyValue = true, bool $printErr = true): void
     {
@@ -27,7 +51,6 @@ class RequestChecker
         }
 
     }
-
 
 
     public static function checkPostInputs(array $inputs, bool $checkEmptyValue = true, bool $printErr = true): void

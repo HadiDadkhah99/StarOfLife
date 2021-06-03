@@ -1,5 +1,4 @@
 <?php
-require_once 'StarOfLife.php';
 
 class DataBaseManager
 {

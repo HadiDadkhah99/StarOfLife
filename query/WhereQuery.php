@@ -1,6 +1,6 @@
 <?php
-require_once dirname(__DIR__) . '/StarOfLife/WhereQueryController.php';
-require_once dirname(__DIR__) . '/StarOfLife/JoinQueryHelper.php';
+require_once dirname(__DIR__) . '/query/WhereQueryController.php';
+require_once dirname(__DIR__) . '/query/JoinQueryHelper.php';
 
 
 class WhereQuery
