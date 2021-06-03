@@ -143,6 +143,39 @@ echo json_encode($data, JSON_UNESCAPED_UNICODE);
 ?>
 ```
 
+# How to use where query ?
+
+### Get all data with custom ``` where ```
+** Get All data **
+```php
+<?php 
+require_once 'StarOfLife.php';
+start("dbName", "userName", "password");
+
+class UserTable extends DataModel
+{
+    //user name
+    public $name;
+    //user wallet
+    public $wallet;
+
+}
+
+$user = new UserTable();
+
+//where
+$w = new WhereQuery();
+//this is SQL Query ( Where my_key=88 )
+$w->greatThan('my_key', 88);
+
+$data = getAll($user, $w);
+
+//print result
+echo json_encode($data, JSON_UNESCAPED_UNICODE);
+
+
+?>
+```
 
 
 
