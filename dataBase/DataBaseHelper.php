@@ -5,7 +5,8 @@ class DataBaseHelper
 {
 
     //data base manager
-    private DataBaseManager $dataBaseManager;
+    /** @var $dataBaseManager DataBaseManager */
+    private $dataBaseManager;
 
     public function __construct(DataBaseManager $dataBaseManager)
     {

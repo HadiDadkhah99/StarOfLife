@@ -6,15 +6,21 @@ require_once dirname(__DIR__) . '/query/JoinQueryHelper.php';
 class WhereQuery
 {
 
-    private bool $checkUseWhere = false;
-    private string $whereQuery = "";
-    private array $vars = [];
-    private array $joinedTables = [];
+    /** @var $checkUseWhere bool */
+    private $checkUseWhere = false;
+    /** @var $whereQuery string */
+    private $whereQuery = "";
+    /** @var $vars array */
+    private $vars = [];
+    /** @var $joinedTables array */
+    private $joinedTables = [];
 
     //controller
-    private WhereQueryController $controller;
+    /** @var $controller WhereQueryController */
+    private $controller;
     //join helper
-    private JoinQueryHelper $joinQueryHelper;
+    /** @var $joinQueryHelper JoinQueryHelper */
+    private $joinQueryHelper;
 
 
     /**

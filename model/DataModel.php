@@ -3,8 +3,13 @@
 
 class DataModel
 {
-    /** @PRIMARY_KEY @AUTO_INCREMENT */
-    public ?int $id;
+
+    /**
+     * @PRIMARY_KEY
+     * @AUTO_INCREMENT
+     * @var $id int
+     */
+    public $id;
 
     public function __construct(?int $id = null)
     {

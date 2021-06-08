@@ -1,49 +1,31 @@
 <?php
 require_once '../StarOfLife.php';
-
-checkHeaderInputs(['Host']);
-
 start("mm", "root", "");
 
-class test extends DataModel
+class UserTable extends DataModel
 {
-
-
-    public $name;
-    public $wallet;
-    public $weight;
-
-
-}
-
-class car extends DataModel
-{
-
-    public $user_id;
-    public $name;
-
-
-}
-
-class join extends DataModel
-{
-
-    /** @COLUMN (car.id) */
+    //Default Primary Key
+    /** @IGNORE */
     public ?int $id;
-    /** @COLUMN (test.name) */
-    public $name;
-    public $wallet;
-    public $weight;
 
-    public $user_id;
+    //custom primary key
+    /** @PRIMARY_KEY @AUTO_INCREMENT */
+    public $my_key;
+    //user name
+    public $name;
+    //user wallet
+    public $wallet;
 
 }
 
+$user = new UserTable();
 
-$t = new test(87);
-
-$c = new car();
+//where
 $w = new WhereQuery();
-$j = new join();
+//this is SQL Query ( Where my_key=88 )
+$w->greatThan('my_key', 88);
 
-echo json_encode(getAll($t));
+$data = getAll($user, $w);
+
+//print result
+echo json_encode($data, JSON_UNESCAPED_UNICODE);

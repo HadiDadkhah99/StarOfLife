@@ -5,8 +5,10 @@ class JoinQueryHelper
 {
 
 
-    private WhereQuery $whereQuery;
-    private string $joinQuery = "";
+    /** @var $whereQuery WhereQuery */
+    private $whereQuery;
+    /** @var $joinQuery string */
+    private $joinQuery = "";
 
 
     public function __construct(WhereQuery $whereQuery)

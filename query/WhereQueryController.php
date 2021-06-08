@@ -4,11 +4,15 @@
 class WhereQueryController
 {
 
-    private WhereQuery $whereQuery;
+    /** @var $whereQuery WhereQuery */
+    private $whereQuery;
 
-    private bool $useLimit = false;
-    private bool $usePage = false;
-    private bool $useOrderBy = false;
+    /** @var $useLimit bool */
+    private $useLimit = false;
+    /** @var $usePage bool */
+    private $usePage = false;
+    /** @var $useOrderBy bool */
+    private $useOrderBy = false;
 
     /**
      * @param WhereQuery $whereQuery

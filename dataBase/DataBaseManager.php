@@ -3,13 +3,17 @@
 class DataBaseManager
 {
 
-    private PDO $pdo;
-    private DataBaseHelper $dataBaseHelper;
+    /** @var $pdo PDO */
+    private $pdo;
+    /** @var $dataBaseHelper DataBaseHelper */
+    private $dataBaseHelper;
 
     public function __construct(string $host, string $username, string $dbName, string $passWord, string $charset = "utf8")
     {
         $this->pdo = new PDO("mysql:host=$host;dbname=$dbName;charset=$charset", $username, $passWord);
         $this->dataBaseHelper = new DataBaseHelper($this);
+
+
     }
 
     /**
