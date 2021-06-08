@@ -177,10 +177,10 @@ class DataBaseHelper
     /**
      * Get selection query
      */
-    private function getSelection(DataModel $dataModel, string $table = null): string
+    private function getSelection(DataModel $dataModel): string
     {
         //set table name
-        $table = empty($table) ? $dataModel->name() : $table;
+        $table = $dataModel->getTableName();
         //result
         $res = "";
         //model vars
@@ -190,10 +190,13 @@ class DataBaseHelper
 
             if (!strpos($dataModel->varAnnotation($key), Annotation::IGNORE)) {
 
+                $columnName = $dataModel->getColumnName($key);
+                $columnName = empty($columnName) ? $key : $columnName;
+
                 if (empty($res))
-                    $res .= " {$table}.{$key} as {$table}_{$key}";
+                    $res .= " {$table}.{$columnName} as {$table}_{$columnName}";
                 else
-                    $res .= " , {$table}.{$key} as {$table}_{$key}";
+                    $res .= " , {$table}.{$columnName} as {$table}_{$columnName}";
 
             }
 

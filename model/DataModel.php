@@ -38,7 +38,13 @@ class DataModel
     }
 
 
-    public function getVarColumn(string $varName): ?string
+    /**
+     * Get column name of var
+     * @param string $varName
+     * @return string|null
+     * @throws ReflectionException
+     */
+    public function getColumnName(string $varName): ?string
     {
 
         $r = new ReflectionProperty($this, $varName);
@@ -48,6 +54,21 @@ class DataModel
 
 
         return null;
+    }
+
+
+    /**
+     * Get Table name
+     * @return string
+     */
+    public function getTableName(): string
+    {
+        $classAnnotation = $this->getClassAnnotation();
+        if (empty($classAnnotation))
+            return $this->name();
+
+        return $this->getAnnotationValue($classAnnotation, Annotation::TABLE);
+
     }
 
     private function getAnnotationValue(string $annotation, string $annotationName): string
@@ -63,6 +84,16 @@ class DataModel
 
 
         return $val;
+    }
+
+    /**
+     * get class annotation
+     */
+    private function getClassAnnotation(): string
+    {
+        $classReflection = new ReflectionClass($this);
+        return $classReflection->getDocComment();
+
     }
 
     /**

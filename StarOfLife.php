@@ -98,7 +98,7 @@ function getAll(DataModel $dataModel, WhereQuery $whereQuery = null, DataModel $
         throw new Exception("Please first start ( dbName , userName , passWord )");
 
     $returnModel = empty($returnModel) ? $dataModel : $returnModel;
-    return $dataBase->getAll($dataModel->name(), $returnModel, $whereQuery);
+    return $dataBase->getAll($dataModel, $returnModel, $whereQuery);
 }
 
 /**

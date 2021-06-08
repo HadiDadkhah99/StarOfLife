@@ -174,6 +174,7 @@ class WhereQuery
     }
 
     /**
+     * @param string|null $as
      * @throws Exception
      */
     public function join(DataModel $dataModel, string $as = null): JoinQueryHelper

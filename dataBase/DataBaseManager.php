@@ -65,7 +65,7 @@ class DataBaseManager
 
 
         //prepare statement
-        $statement = $this->pdo->prepare("INSERT INTO {$dataModel->name()} ({$this->dataBaseHelper->classifyVarsName($dataModel,true)})VALUES({$this->dataBaseHelper->classifyPdoVarsName($dataModel,true)}) $where");
+        $statement = $this->pdo->prepare("INSERT INTO {$dataModel->getTableName()} ({$this->dataBaseHelper->classifyVarsName($dataModel,true)})VALUES({$this->dataBaseHelper->classifyPdoVarsName($dataModel,true)}) $where");
 
         //**classify variables (bind param(:d0,$var)
         $vars = $this->dataBaseHelper->classifyPdoStatement($dataModel, true);
@@ -105,7 +105,7 @@ class DataBaseManager
 
 
         //prepare statement
-        $statement = $this->pdo->prepare("UPDATE {$dataModel->name()} SET {$this->dataBaseHelper->classifyPdoSetVars($dataModel,true)} $where");
+        $statement = $this->pdo->prepare("UPDATE {$dataModel->getTableName()} SET {$this->dataBaseHelper->classifyPdoSetVars($dataModel,true)} $where");
 
 
         //**classify variables (bind param(:d0,$var)
@@ -142,7 +142,7 @@ class DataBaseManager
 
 
         //prepare statement
-        $statement = $this->pdo->prepare("DELETE FROM {$dataModel->name()} $where");
+        $statement = $this->pdo->prepare("DELETE FROM {$dataModel->getTableName()} $where");
 
         //set where vars
         if (!empty($whereQuery)) {
@@ -173,7 +173,8 @@ class DataBaseManager
 
 
         //prepare statement
-        $statement = $this->pdo->prepare("SELECT {$this->dataBaseHelper->getSelectionQuery(new $className,$whereQuery)} FROM {$dataModel->name()} $where");
+        $statement = $this->pdo->prepare("SELECT {$this->dataBaseHelper->getSelectionQuery(new $className,$whereQuery)} FROM {$dataModel->getTableName()} $where");
+
 
         //set where vars
         if (!empty($whereQuery)) {
@@ -204,7 +205,7 @@ class DataBaseManager
      * Get all data
      * The returned data is array of DataModel (if data is not in DataBase so the returned data is null)
      */
-    public function getAll(string $className, DataModel $returnModel, WhereQuery $whereQuery = null): ?array
+    public function getAll(DataModel $dataModel, DataModel $returnModel, WhereQuery $whereQuery = null): ?array
     {
 
         if (!empty($whereQuery))
@@ -214,7 +215,7 @@ class DataBaseManager
 
 
         //prepare statement
-        $statement = $this->pdo->prepare("SELECT {$this->dataBaseHelper->getSelectionQuery(new $className,$whereQuery)} FROM $className $where");
+        $statement = $this->pdo->prepare("SELECT {$this->dataBaseHelper->getSelectionQuery($dataModel,$whereQuery)} FROM {$dataModel->getTableName()} $where");
 
 
         //set where vars
@@ -239,7 +240,7 @@ class DataBaseManager
             foreach ($data as $res) {
 
                 //put on array
-                $resultData[] = $this->setModelVars($className, $res, $returnModel, $whereQuery);
+                $resultData[] = $this->setModelVars($dataModel->name(), $res, $returnModel, $whereQuery);
             }
 
             //return data
@@ -267,7 +268,7 @@ class DataBaseManager
             if (strpos($object->varAnnotation($key), Annotation::IGNORE))
                 continue;
 
-            if (!empty($columnName = $object->getVarColumn($key))) {
+            if (!empty($columnName = $object->getColumnName($key))) {
 
                 if (strpos($columnName, "."))
                     $resKey = str_replace(".", "_", $columnName);

@@ -6,5 +6,6 @@ abstract class Annotation
     public const AUTO_INCREMENT = "@AUTO_INCREMENT";
     public const IGNORE = "@IGNORE";
     public const COLUMN = "@COLUMN";
+    public const TABLE = "@TABLE";
 
 }
