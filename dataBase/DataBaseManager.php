@@ -101,7 +101,7 @@ class DataBaseManager
         if (!empty($whereQuery))
             $where = "WHERE " . $whereQuery->getWhereQuery();
         else
-            $where = "WHERE {$dataModel->getPrimaryKeyName()}={$dataModel->getPrimaryKeyValue()}";
+            $where = "WHERE {$dataModel->getTableName()}.{$dataModel->getPrimaryKeyName()}={$dataModel->getPrimaryKeyValue()}";
 
 
         //prepare statement
@@ -138,7 +138,7 @@ class DataBaseManager
         if (!empty($whereQuery))
             $where = "WHERE " . $whereQuery->getWhereQuery();
         else
-            $where = "WHERE {$dataModel->getPrimaryKeyName()}={$dataModel->getPrimaryKeyValue()}";
+            $where = "WHERE {$dataModel->getTableName()}.{$dataModel->getPrimaryKeyName()}={$dataModel->getPrimaryKeyValue()}";
 
 
         //prepare statement
@@ -169,7 +169,7 @@ class DataBaseManager
         if (!empty($whereQuery))
             $where = " {$whereQuery->getWhereQuery()} ";
         else
-            $where = " WHERE {$dataModel->name()}.{$dataModel->getPrimaryKeyName()} = {$dataModel->getPrimaryKeyValue()} ";
+            $where = " WHERE {$dataModel->getTableName()}.{$dataModel->getPrimaryKeyName()} = {$dataModel->getPrimaryKeyValue()} ";
 
 
         //prepare statement
