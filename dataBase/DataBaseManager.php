@@ -273,11 +273,11 @@ class DataBaseManager
                 if (strpos($columnName, "."))
                     $resKey = str_replace(".", "_", $columnName);
                 else
-                    $resKey = !empty($this->dataBaseHelper->findVarInClasses(new $className, $key)) ? "{$className}_{$columnName}" : "{$this->dataBaseHelper->findVarInClasses($whereQuery,$key)}_{$columnName}";
+                    $resKey = !empty($this->dataBaseHelper->findVarInClasses(new $className, $key)) ? "{$object->getTableName()}_{$columnName}" : "{$this->dataBaseHelper->findVarInClasses($whereQuery,$key)->getTableName()}_{$columnName}";
 
             } else
 
-                $resKey = !empty($this->dataBaseHelper->findVarInClasses(new $className, $key)) ? "{$className}_{$key}" : "{$this->dataBaseHelper->findVarInClasses($whereQuery,$key)}_{$key}";
+                $resKey = !empty($this->dataBaseHelper->findVarInClasses(new $className, $key)) ? "{$object->getTableName()}_{$key}" : "{$this->dataBaseHelper->findVarInClasses($whereQuery,$key)->getTableName()}_{$key}";
 
 
             $reflectionClass->getProperty($key)->setValue($object, $res[$resKey]);

@@ -241,16 +241,18 @@ class DataBaseHelper
     /**
      * @param $searchIn WhereQuery|DataModel
      * @param string $var
-     * @return string|null
+     * @return DataModel|null
      */
-    public function findVarInClasses($searchIn, string $var): ?string
+    public function findVarInClasses($searchIn, string $var): ?DataModel
     {
 
         if ($searchIn instanceof DataModel) {
 
             $object = $searchIn;
-            if (in_array($var, $object->getAllVars_string()))
-                return $object->name();
+            if (in_array($var, $object->getAllVars_string())) {
+                $className = $object->name();
+                return new $className();
+            }
 
 
         } else if ($searchIn instanceof WhereQuery) {
@@ -260,8 +262,10 @@ class DataBaseHelper
 
                 /** @var  $object DataModel */
                 $object = new $class;
-                if (in_array($var, $object->getAllVars_string()))
-                    return $class;
+                if (in_array($var, $object->getAllVars_string())) {
+                    $className = "$class";
+                    return new $className();
+                }
             }
 
         }
@@ -269,5 +273,6 @@ class DataBaseHelper
 
         return null;
     }
+
 
 }
