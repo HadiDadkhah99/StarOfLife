@@ -35,6 +35,7 @@ insert($user);
 ?>
 ```
 
+
 ### #Update Data on DataBase
 For update data you have to create class that extends of (DataModel) and Have the same name with DataBase table
 <br>
@@ -141,6 +142,32 @@ echo json_encode($data, JSON_UNESCAPED_UNICODE);
 
 
 ?>
+```
+<br>
+
+###If the class and table names are not the same , use this annotation : 
+```php
+<?php 
+
+/** @TABLE (user_table) */
+class UserTable extends DataModel
+{
+ //...
+ //...
+ //...
+}
+```
+###If the property and column names are not the same , use this annotation :
+```php
+<?php 
+
+class UserTable extends DataModel
+{
+   
+   /** @COLUMN (f_name) */
+   public $first_name;
+    
+}
 ```
 
 # How to use where query ?
