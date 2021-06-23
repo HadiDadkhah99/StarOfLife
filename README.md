@@ -192,7 +192,7 @@ $user = new UserTable();
 
 //where
 $w = new WhereQuery();
-//this is SQL Query ( Where my_key=88 )
+//this is SQL Query ( Where my_key > 88 )
 $w->greatThan('my_key', 88);
 
 $data = getAll($user, $w);
@@ -212,7 +212,7 @@ echo json_encode($data, JSON_UNESCAPED_UNICODE);
 **Update**
 ```php
 <?php
-require_once '../StarOfLife.php';
+require_once 'StarOfLife.php';
 start("dbName", "userName", "password");
 
 class UserTable extends DataModel
@@ -244,7 +244,7 @@ update($user);
 **Delete**
 ```php
 <?php
-require_once '../StarOfLife.php';
+require_once 'StarOfLife.php';
 start("dbName", "userName", "password");
 
 class UserTable extends DataModel
