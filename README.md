@@ -145,7 +145,7 @@ echo json_encode($data, JSON_UNESCAPED_UNICODE);
 ```
 <br>
 
-###If the class and table names are not the same , use this annotation : 
+### If the class and table names are not the same , use this annotation : 
 ```php
 <?php 
 
@@ -157,7 +157,7 @@ class UserTable extends DataModel
  //...
 }
 ```
-###If the property and column names are not the same , use this annotation :
+### If the property and column names are not the same , use this annotation :
 ```php
 <?php 
 
