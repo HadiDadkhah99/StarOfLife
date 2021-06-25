@@ -19,9 +19,9 @@ function checkGetInputs(array $inputs, bool $checkEmptyValue = true, bool $print
 /**
  * Check inputs of POST request
  */
-function checkPostInputs(array $inputs, bool $checkEmptyValue = true, bool $printErr = true): void
+function checkPostInputs(array $inputs, bool $checkEmptyValue = true, bool $printErr = true): ?bool
 {
-    RequestChecker::checkPostInputs($inputs, $checkEmptyValue, $printErr);
+    return RequestChecker::checkPostInputs($inputs, $checkEmptyValue, $printErr);
 }
 
 

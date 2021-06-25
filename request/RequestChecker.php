@@ -53,26 +53,32 @@ class RequestChecker
     }
 
 
-    public static function checkPostInputs(array $inputs, bool $checkEmptyValue = true, bool $printErr = true): void
+    public static function checkPostInputs(array $inputs, bool $checkEmptyValue = true, bool $printErr = true): ?bool
     {
 
         foreach ($inputs as $val) {
 
             //if is not set key
             if (!isset($_POST[$val])) {
-                if ($printErr)
+
+                if ($printErr) {
                     echo json_encode(['error_type' => __FUNCTION__ . "()", 'message' => "The var name ($val) is not set in POST request"], JSON_UNESCAPED_UNICODE);
-                die();
+                    die();
+                } else return false;
+
             } //if is set key
             else if (isset($_POST[$val]) and $checkEmptyValue and empty($_POST[$val])) {
 
-                if ($printErr)
+                if ($printErr) {
                     echo json_encode(['error_type' => __FUNCTION__, 'message' => "The var name ($val) is empty in POST request"], JSON_UNESCAPED_UNICODE);
-                die();
+                    die();
+                } else return false;
 
             }
 
         }
+
+        return true;
 
     }
 
