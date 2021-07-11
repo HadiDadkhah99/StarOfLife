@@ -4,7 +4,7 @@ class RequestChecker
 {
 
 
-    public static function checkHeaderInputs(array $inputs, bool $checkEmptyValue = true, bool $printErr = true): void
+    public static function checkHeaderInputs(array $inputs, bool $checkEmptyValue = true, bool $printErr = true): ?bool
     {
 
 
@@ -12,15 +12,17 @@ class RequestChecker
 
             //if is not set key
             if (!isset(getallheaders()[$val])) {
-                if ($printErr)
+                if ($printErr) {
                     echo json_encode(['error_type' => __FUNCTION__ . "()", 'message' => "The var name ($val) is not set in Header"], JSON_UNESCAPED_UNICODE);
-                die();
+                    die();
+                } else return false;
             } //if is set key
             else if (isset(getallheaders()[$val]) and $checkEmptyValue and empty(getallheaders()[$val])) {
 
-                if ($printErr)
+                if ($printErr) {
                     echo json_encode(['error_type' => __FUNCTION__, 'message' => "The var name ($val) is empty in Header"], JSON_UNESCAPED_UNICODE);
-                die();
+                    die();
+                } else return false;
 
             }
 
@@ -29,22 +31,24 @@ class RequestChecker
     }
 
 
-    public static function checkGetInputs(array $inputs, bool $checkEmptyValue = true, bool $printErr = true): void
+    public static function checkGetInputs(array $inputs, bool $checkEmptyValue = true, bool $printErr = true): ?bool
     {
 
         foreach ($inputs as $val) {
 
             //if is not set key
             if (!isset($_GET[$val])) {
-                if ($printErr)
+                if ($printErr) {
                     echo json_encode(['error_type' => __FUNCTION__ . "()", 'message' => "The var name ($val) is not set in GET request"], JSON_UNESCAPED_UNICODE);
-                die();
+                    die();
+                } else return false;
             } //if is set key
             else if (isset($_GET[$val]) and $checkEmptyValue and empty($_GET[$val])) {
 
-                if ($printErr)
+                if ($printErr) {
                     echo json_encode(['error_type' => __FUNCTION__, 'message' => "The var name ($val) is empty in GET request"], JSON_UNESCAPED_UNICODE);
-                die();
+                    die();
+                } else return false;
 
             }
 
