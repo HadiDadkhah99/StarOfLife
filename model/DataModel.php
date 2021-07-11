@@ -4,6 +4,7 @@
 class DataModel
 {
 
+
     /**
      * @PRIMARY_KEY
      * @var $id int
