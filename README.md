@@ -222,7 +222,7 @@ class UserTable extends DataModel
     public ?int $id;
 
     //custom primary key
-    /** @PRIMARY_KEY @AUTO_INCREMENT */
+    /** @PRIMARY_KEY  */
     public $my_key;
     //user name
     public $name;
@@ -254,7 +254,7 @@ class UserTable extends DataModel
     public ?int $id;
 
     //custom primary key
-    /** @PRIMARY_KEY @AUTO_INCREMENT */
+    /** @PRIMARY_KEY  */
     public $my_key;
     //user name
     public $name;

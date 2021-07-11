@@ -6,7 +6,6 @@ class DataModel
 
     /**
      * @PRIMARY_KEY
-     * @AUTO_INCREMENT
      * @var $id int
      */
     public $id;
