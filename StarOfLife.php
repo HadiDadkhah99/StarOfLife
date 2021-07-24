@@ -3,6 +3,7 @@ require_once dirname(__DIR__) . '/StarOfLife/util/Annotation.php';
 require_once dirname(__DIR__) . '/StarOfLife/model/DataModel.php';
 require_once dirname(__DIR__) . '/StarOfLife/query/WhereQuery.php';
 require_once dirname(__DIR__) . '/StarOfLife/request/RequestChecker.php';
+require_once dirname(__DIR__) . '/StarOfLife/hash/RandomHash.php';
 
 /* @var $dataBase DataBaseManager */
 $dataBase = null;
@@ -119,6 +120,59 @@ function query(string $query, array $inputVars = null)
 
 }
 
+/**
+ * @param string $type
+ * @param int $length
+ * Default type is : A-Z,a-z,0-9
+ * or you can set custom type like:
+ *
+ * $type=a-z,0-9
+ * or
+ * $type=A-Z,a-z
+ * or
+ * $type=0-9
+ * or
+ * .
+ * .
+ * .
+ */
+function randomHash(string $type = '', int $length = 32): string
+{
+    $hash = new RandomHash($type, $length);
+    return $hash->randomHash();
+}
+
+/**
+ * @param string $band
+ * @param int $length
+ * Default type is : A-Z,a-z,0-9
+ * or you can set custom type like:
+ *
+ * $type=a-z,0-9
+ * or
+ * $type=A-Z,a-z
+ * or
+ * $type=0-9
+ * or
+ * .
+ * .
+ * .
+ */
+function randomHashWithBand(string $band = '', int $length = 32): string
+{
+    $hash = new RandomHash('', $length);
+    $hash->setBand($band);
+    return $hash->randomHash();
+}
+
+/**
+ * @param string $dbName
+ * @param string $userName
+ * @param string $passWord
+ * @param string $host
+ * @param string $charset
+ * Start StarOfLife
+ */
 function start(string $dbName, string $userName, string $passWord, string $host = "localhost", string $charset = "utf8")
 {
 
