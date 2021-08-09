@@ -1,5 +1,5 @@
 # StarOfLife
-The mini php frame work
+The mini php frame work for api
 
 ## At the first you need add Main file on your project:
 
