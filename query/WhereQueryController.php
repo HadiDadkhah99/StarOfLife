@@ -78,9 +78,7 @@ class WhereQueryController
     public function likeControl(): void
     {
 
-        if ($this->uselike)
-            throw new Exception("Err in page control : Delicate orderBy() method !");
-        else if ($this->useOrderBy)
+        if ($this->useOrderBy)
             throw new Exception("Err in page control : You don't have allow use orderBy() before like() !");
         else if ($this->usePage)
             throw new Exception("Err in page control : You don't have allow use page() before like() !");

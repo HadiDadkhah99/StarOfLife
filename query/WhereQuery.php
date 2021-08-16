@@ -109,9 +109,17 @@ class WhereQuery
     }
 
 
+
     public function and(): WhereQuery
     {
         $this->whereQuery .= " AND ";
+
+        return $this;
+    }
+
+    public function openAnd(): WhereQuery
+    {
+        $this->whereQuery .= " AND (";
 
         return $this;
     }
@@ -122,6 +130,21 @@ class WhereQuery
 
         return $this;
     }
+
+    public function openOr(): WhereQuery
+    {
+        $this->whereQuery .= " OR (";
+
+        return $this;
+    }
+
+    public function close(): WhereQuery
+    {
+        $this->whereQuery .= " ) ";
+
+        return $this;
+    }
+
 
     public function not(): WhereQuery
     {

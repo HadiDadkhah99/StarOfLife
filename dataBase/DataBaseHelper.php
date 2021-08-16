@@ -14,21 +14,18 @@ class DataBaseHelper
     }
 
     /**
-     * Get class var name from pdo var name
+     * set (.) to column name
      */
-    public function getModelVarName(DataModel $dataModel, string $pdoName): ?string
+    public function dotStatement(DataModel $dataModel, string $statement): string
     {
-        //pdo vars as (array) like (:d0,:d2,)
-        $pdoVars = $this->getPdoVars($dataModel);
 
-        $i = 0;
-        foreach ($dataModel->getAllVars() as $key => $var) {
-            if ($pdoVars[$i] == $pdoName)
-                return $key;
-            $i++;
-        }
+        //if has dot
+        if (strpos($statement, "."))
+            return $statement;
 
-        return null;
+
+        return "{$dataModel->getTableName()}.$statement";
+
     }
 
 

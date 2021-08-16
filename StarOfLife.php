@@ -121,6 +121,29 @@ function query(string $query, array $inputVars = null)
 }
 
 /**
+ * Get count of column
+ * @param DataModel $dataModel
+ * @param string $columnName
+ * @return int|null
+ * @throws Exception
+ */
+function dataCount(DataModel $dataModel, string $columnName, WhereQuery $whereQuery = null): int
+{
+
+    global $dataBase;
+    if (empty($dataBase))
+        throw new Exception("Please first start ( dbName , userName , passWord )");
+
+
+    return $dataBase->rowCount($dataModel, $columnName, $whereQuery);
+
+}
+
+/**
+ *
+ */
+
+/**
  * @param string $type
  * @param int $length
  * Default type is : A-Z,a-z,0-9
@@ -180,6 +203,7 @@ function start(string $dbName, string $userName, string $passWord, string $host 
     require_once dirname(__DIR__) . '/StarOfLife/dataBase/DataBaseManager.php';
 
     global $dataBase;
-    $dataBase = new DataBaseManager($host, $userName, $dbName, $passWord, $charset);
+    if (empty($dataBase))
+        $dataBase = new DataBaseManager($host, $userName, $dbName, $passWord, $charset);
 
 }

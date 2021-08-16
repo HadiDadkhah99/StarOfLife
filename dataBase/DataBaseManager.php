@@ -52,6 +52,38 @@ class DataBaseManager
     }
 
     /**
+     * Get row count of special table
+     */
+    public function rowCount(DataModel $dataModel, string $column, WhereQuery $whereQuery = null, $checkNull = false): int
+    {
+
+        $where = "";
+
+        //check where
+        if (!empty($whereQuery))
+            $where = $whereQuery->getWhereQuery();
+
+        //prepare statement
+        $statement = $this->pdo->prepare("SELECT COUNT($column) as row_count FROM {$dataModel->getTableName()}  $where");
+
+
+        //set where vars
+        if (!empty($whereQuery)) {
+            foreach ($whereQuery->getVars() as $key => &$var)
+                $statement->bindParam($key, $var);
+        }
+
+        //run query
+        $statement->execute();
+
+        //count
+        $res = $statement->fetch(PDO::FETCH_ASSOC);
+
+
+        return is_array($res) ? intval($res['row_count']) : 0;
+    }
+
+    /**
      * Insert new data (send object of DataModel)
      * returned data is last inserted id
      */
@@ -219,8 +251,6 @@ class DataBaseManager
         $statement = $this->pdo->prepare("SELECT {$this->dataBaseHelper->getSelectionQuery($dataModel,$whereQuery)} FROM {$dataModel->getTableName()} $where");
 
 
-
-
         //set where vars
         if (!empty($whereQuery)) {
             foreach ($whereQuery->getVars() as $key => &$var)
@@ -232,7 +262,6 @@ class DataBaseManager
         $statement->execute();
         //get all data
         $data = $statement->fetchAll(PDO::FETCH_ASSOC);
-
 
 
         //check data is not empty
