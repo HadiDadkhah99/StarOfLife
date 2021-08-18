@@ -80,6 +80,7 @@ class DataBaseManager
         $res = $statement->fetch(PDO::FETCH_ASSOC);
 
 
+
         return is_array($res) ? intval($res['row_count']) : 0;
     }
 
