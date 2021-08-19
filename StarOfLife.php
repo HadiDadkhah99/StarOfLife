@@ -139,6 +139,8 @@ function dataCount(DataModel $dataModel, string $columnName, WhereQuery $whereQu
 
 }
 
+
+
 /**
  *
  */

@@ -183,21 +183,36 @@ class DataBaseHelper
         //model vars
         $vars = $dataModel->getAllVars();
 
+
+
         foreach ($vars as $key => $value) {
 
+            //********check IGNORE ANNOTATION
             if (!strpos($dataModel->varAnnotation($key), Annotation::IGNORE)) {
 
                 $columnName = $dataModel->getColumnName($key);
                 $columnName = empty($columnName) ? $key : $columnName;
 
-                if (empty($res))
-                    $res .= " {$table}.{$columnName} as {$table}_{$columnName}";
-                else
-                    $res .= " , {$table}.{$columnName} as {$table}_{$columnName}";
+
+                //********check CONCAT ANNOTATION
+                if (empty($this->checkConcat($dataModel, $key))) {
+                    if (empty($res))
+                        $res .= " $table.$columnName as {$table}_{$columnName}";
+                    else
+                        $res .= " , $table.$columnName as {$table}_{$columnName}";
+                } //********check CONCAT ANNOTATION
+                else {
+                    if (empty($res))
+                        $res .= " {$this->checkConcat($dataModel, $key)} as {$table}_{$columnName}";
+                    else
+                        $res .= " , {$this->checkConcat($dataModel, $key)} as {$table}_{$columnName}";
+                }
+
 
             }
 
         }
+
 
 
         return $res;
@@ -205,6 +220,7 @@ class DataBaseHelper
 
     public function getSelectionQuery(DataModel $dataModel, WhereQuery $whereQuery = null): string
     {
+
         //check where query
         if (empty($whereQuery))
             return " {$this->getSelection($dataModel)} ";
@@ -270,6 +286,26 @@ class DataBaseHelper
 
 
         return null;
+    }
+
+
+    private function checkConcat(DataModel $dataModel, string $key): ?string
+    {
+
+
+        switch ($key) {
+
+            case strpos($dataModel->varAnnotation($key), Annotation::CONCAT) ||
+                strpos($dataModel->varAnnotation($key), Annotation::LEFT_CONCAT):
+                return "CONCAT(\"{$dataModel->getConcatValue($key)}\",{$dataModel->getTableName()}.$key)";
+
+            case strpos($dataModel->varAnnotation($key), Annotation::RIGHT_CONCAT):
+                return "CONCAT(\"{$dataModel->getTableName()}.$key\",{$dataModel->getConcatValue($key)})";
+
+            default:
+                return null;
+        }
+
     }
 
 }

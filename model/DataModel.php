@@ -56,6 +56,28 @@ class DataModel
         return null;
     }
 
+    /**
+     * Get concat value of var
+     * @param string $varName
+     * @return string|null
+     * @throws ReflectionException
+     */
+    public function getConcatValue(string $varName): ?string
+    {
+
+        $r = new ReflectionProperty($this, $varName);
+
+        if (is_string($annotation = $r->getDocComment()) and strpos($annotation, Annotation::CONCAT))
+            return $this->getAnnotationValue($annotation, Annotation::CONCAT);
+        else if (is_string($annotation = $r->getDocComment()) and strpos($annotation, Annotation::LEFT_CONCAT))
+            return $this->getAnnotationValue($annotation, Annotation::LEFT_CONCAT);
+        else if (is_string($annotation = $r->getDocComment()) and strpos($annotation, Annotation::RIGHT_CONCAT))
+            return $this->getAnnotationValue($annotation, Annotation::RIGHT_CONCAT);
+
+
+        return null;
+    }
+
 
     /**
      * Get Table name
