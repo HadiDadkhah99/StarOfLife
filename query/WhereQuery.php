@@ -22,6 +22,8 @@ class WhereQuery
     /** @var $joinQueryHelper JoinQueryHelper */
     private $joinQueryHelper;
 
+    /** @var int */
+    private $counter = 0;
 
     /**
      * WhereQuery constructor.
@@ -40,10 +42,12 @@ class WhereQuery
     {
         $e = strpos($var, ".") ? explode(".", $var)[1] : $var;
         $this->whereQuery .= !$this->checkUseWhere ? " WHERE " : "";
-        $this->whereQuery .= " $var=:$e ";
-        $this->vars[":$e"] = $value;
+        $this->whereQuery .= " $var=:{$e}$this->counter";
+        $this->vars[":{$e}$this->counter"] = $value;
 
         $this->checkUseWhere = true;
+
+        $this->counter++;
         return $this;
     }
 
@@ -54,11 +58,12 @@ class WhereQuery
     {
         $e = strpos($var, ".") ? explode(".", $var)[1] : $var;
         $this->whereQuery .= !$this->checkUseWhere ? " WHERE " : "";
-        $this->whereQuery .= " NOT $var=:$e ";
-        $this->vars[":$e"] = $value;
+        $this->whereQuery .= " NOT $var=:{$e}$this->counter ";
+        $this->vars[":{$e}$this->counter"] = $value;
 
         $this->checkUseWhere = true;
 
+        $this->counter++;
         return $this;
     }
 
@@ -71,11 +76,12 @@ class WhereQuery
     {
         $e = strpos($var, ".") ? explode(".", $var)[1] : $var;
         $this->whereQuery .= !$this->checkUseWhere ? " WHERE " : "";
-        $this->whereQuery .= $orEqual ? " $var>=:$e " : " $var>:$e ";
-        $this->vars[":$e"] = $value;
+        $this->whereQuery .= $orEqual ? " $var>=:{$e}$this->counter " : " $var>:{$e}$this->counter ";
+        $this->vars[":{$e}$this->counter"] = $value;
 
         $this->checkUseWhere = true;
 
+        $this->counter++;
         return $this;
     }
 
@@ -87,11 +93,12 @@ class WhereQuery
     {
         $e = strpos($var, ".") ? explode(".", $var)[1] : $var;
         $this->whereQuery .= !$this->checkUseWhere ? " WHERE " : "";
-        $this->whereQuery .= $orEqual ? " $var<=:$e " : " $var<:$e ";
+        $this->whereQuery .= $orEqual ? " $var<=:{$e}$this->counter " : " $var<:{$e}$this->counter ";
         $this->vars[":$e"] = $value;
 
         $this->checkUseWhere = true;
 
+        $this->counter++;
         return $this;
     }
 
@@ -107,7 +114,6 @@ class WhereQuery
 
         return $this;
     }
-
 
 
     public function and(): WhereQuery
