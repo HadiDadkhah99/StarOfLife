@@ -34,6 +34,11 @@ class WhereQuery
         $this->joinQueryHelper = new JoinQueryHelper($this);
     }
 
+    public static function instance(): WhereQuery
+    {
+        return new WhereQuery();
+    }
+
 
     /**
      * @param mixed $value

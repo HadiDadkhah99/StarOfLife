@@ -239,7 +239,7 @@ class DataBaseManager
      * Get all data
      * The returned data is array of DataModel (if data is not in DataBase so the returned data is null)
      */
-    public function getAll(DataModel $dataModel, DataModel $returnModel, WhereQuery $whereQuery = null): ?array
+    public function getAll(DataModel $dataModel, DataModel $returnModel, WhereQuery $whereQuery = null): array
     {
 
         if (!empty($whereQuery))
@@ -250,8 +250,6 @@ class DataBaseManager
 
         //prepare statement
         $statement = $this->pdo->prepare("SELECT {$this->dataBaseHelper->getSelectionQuery($dataModel,$whereQuery)} FROM {$dataModel->getTableName()} $where");
-
-
 
 
         //set where vars
@@ -276,7 +274,6 @@ class DataBaseManager
 
             foreach ($data as $res) {
 
-
                 //put on array
                 $resultData[] = $this->setModelVars($dataModel->name(), $res, $returnModel, $whereQuery);
             }
@@ -285,7 +282,7 @@ class DataBaseManager
             return $resultData;
         }
 
-        return null;
+        return [];
     }
 
     function setModelVars(string $className, array $res, DataModel $returnModel, WhereQuery $whereQuery = null): DataModel

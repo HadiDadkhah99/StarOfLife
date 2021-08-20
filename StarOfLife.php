@@ -4,6 +4,7 @@ require_once dirname(__DIR__) . '/StarOfLife/model/DataModel.php';
 require_once dirname(__DIR__) . '/StarOfLife/query/WhereQuery.php';
 require_once dirname(__DIR__) . '/StarOfLife/request/RequestChecker.php';
 require_once dirname(__DIR__) . '/StarOfLife/hash/RandomHash.php';
+require_once dirname(__DIR__) . '/StarOfLife/err/Err.php';
 
 /* @var $dataBase DataBaseManager */
 $dataBase = null;
@@ -92,7 +93,7 @@ function get(DataModel $dataModel, WhereQuery $whereQuery = null, DataModel $ret
  * @param DataModel|null $returnModel
  * @throws Exception
  */
-function getAll(DataModel $dataModel, WhereQuery $whereQuery = null, DataModel $returnModel = null): ?array
+function getAll(DataModel $dataModel, WhereQuery $whereQuery = null, DataModel $returnModel = null): array
 {
     global $dataBase;
     if (empty($dataBase))
