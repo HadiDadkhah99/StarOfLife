@@ -15,7 +15,8 @@ class WhereQueryController
     private $useOrderBy = false;
     /** @var $uselike bool */
     private $uselike = false;
-
+    /** @var $useGroupBy bool */
+    private $useGroupBy = false;
     /**
      * @param WhereQuery $whereQuery
      */
@@ -89,5 +90,21 @@ class WhereQueryController
         $this->uselike = true;
     }
 
+    /**
+     * @throws Exception
+     */
+    public function groupByControl(): void
+    {
+
+        if ($this->useOrderBy)
+            throw new Exception("Err in page control : You don't have allow use orderBy() before like() !");
+        else if ($this->usePage)
+            throw new Exception("Err in page control : You don't have allow use page() before like() !");
+        else if ($this->useLimit)
+            throw new Exception("Err in page control : You don't have allow use limit() before like() !");
+
+        //use
+        $this->useGroupBy = true;
+    }
 
 }

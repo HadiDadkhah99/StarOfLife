@@ -184,7 +184,6 @@ class DataBaseHelper
         $vars = $dataModel->getAllVars();
 
 
-
         foreach ($vars as $key => $value) {
 
             //********check IGNORE ANNOTATION
@@ -194,25 +193,19 @@ class DataBaseHelper
                 $columnName = empty($columnName) ? $key : $columnName;
 
 
-                //********check CONCAT ANNOTATION
-                if (empty($this->checkConcat($dataModel, $key))) {
-                    if (empty($res))
-                        $res .= " $table.$columnName as {$table}_{$columnName}";
-                    else
-                        $res .= " , $table.$columnName as {$table}_{$columnName}";
-                } //********check CONCAT ANNOTATION
-                else {
-                    if (empty($res))
-                        $res .= " {$this->checkConcat($dataModel, $key)} as {$table}_{$columnName}";
-                    else
-                        $res .= " , {$this->checkConcat($dataModel, $key)} as {$table}_{$columnName}";
-                }
+                $column = "$table.$columnName";
+                $comma = empty($res) ? '' : ',';
 
+                //check CONCAT
+                $column = empty($this->checkConcat($dataModel, $key)) ? $column : "{$this->checkConcat($dataModel, $key)}";
+
+
+
+                $res .= " $comma $column AS {$table}_{$columnName} ";
 
             }
 
         }
-
 
 
         return $res;
@@ -308,4 +301,13 @@ class DataBaseHelper
 
     }
 
+    private function checkCount(DataModel $dataModel, string $key): ?string
+    {
+
+        if (strpos($dataModel->varAnnotation($key), Annotation::CONCAT))
+            return "COUNT({$dataModel->getTableName()}.$key)";
+
+        return null;
+
+    }
 }

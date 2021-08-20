@@ -21,9 +21,12 @@ class WhereQuery
     //join helper
     /** @var $joinQueryHelper JoinQueryHelper */
     private $joinQueryHelper;
-
     /** @var int */
     private $counter = 0;
+
+
+    /** Group by query */
+    private $groupBy = "";
 
     /**
      * WhereQuery constructor.
@@ -223,6 +226,20 @@ class WhereQuery
     }
 
     /**
+     * Group by (just simple group by)
+     * @throws Exception
+     */
+    public function groupBy(string $var, bool $asc = true): WhereQuery
+    {
+        //control
+        $this->controller->groupByControl();
+
+        $this->groupBy .= " GROUP BY $var " . ($asc ? " ASC " : " DESC ");
+
+        return $this;
+    }
+
+    /**
      * @param string|null $as
      * @throws Exception
      */
@@ -246,9 +263,13 @@ class WhereQuery
     }
 
 
+    /**
+     * Get string query
+     * @return string
+     */
     public function getWhereQuery(): string
     {
-        return $this->whereQuery;
+        return $this->whereQuery.$this->groupBy;
     }
 
 

@@ -57,6 +57,24 @@ class DataModel
     }
 
     /**
+     * Get count
+     * @param string $varName
+     * @return string|null
+     * @throws ReflectionException
+     */
+    public function getCountValue(string $varName): ?string
+    {
+
+        $r = new ReflectionProperty($this, $varName);
+
+        if (is_string($annotation = $r->getDocComment()) and strpos($annotation, Annotation::COUNT))
+            return $this->getAnnotationValue($annotation, Annotation::COUNT);
+
+
+        return null;
+    }
+
+    /**
      * Get concat value of var
      * @param string $varName
      * @return string|null
