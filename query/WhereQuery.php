@@ -102,7 +102,7 @@ class WhereQuery
         $e = strpos($var, ".") ? explode(".", $var)[1] : $var;
         $this->whereQuery .= !$this->checkUseWhere ? " WHERE " : "";
         $this->whereQuery .= $orEqual ? " $var<=:{$e}$this->counter " : " $var<:{$e}$this->counter ";
-        $this->vars[":$e"] = $value;
+        $this->vars[":{$e}$this->counter"] = $value;
 
         $this->checkUseWhere = true;
 
