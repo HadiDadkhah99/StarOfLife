@@ -270,3 +270,125 @@ delete($user);
 
 ?>
 ```
+
+##How use where query ?
+
+####Example 1: Get user if (name == hadi)
+
+
+```php
+<?php
+require_once 'StarOfLife.php';
+start("dbName", "userName", "password");
+
+/** @TABLE(user_table) */
+class UserTable extends DataModel
+{
+    
+    //user name
+    public $name;
+    
+    //user wallet
+    public $wallet;
+
+}
+
+$where=WhereQuery::instance()->equal('name','hadi');
+
+//first argument is selectable table and second argument is where
+//SELECT id , name , wallet FROM user_table WHERE name='hadi' 
+/** @var  $user UserTable */
+$user=get(new UserTable(),$where);
+
+
+/** if you want to delete or update or insert or ...
+
+$user->name='Hadi Dadkhah';
+$user->wallet=313;
+update($user);
+delete($user);
+insert($user);
+ 
+*/
+
+?>
+```
+
+####Example 2: Get user if (wallet > 5)
+```php
+<?php
+require_once 'StarOfLife.php';
+start("dbName", "userName", "password");
+
+/** @TABLE(user_table) */
+class UserTable extends DataModel
+{
+    
+    //user name
+    public $name;
+    
+    //user wallet
+    public $wallet;
+
+}
+
+//for ( >= ) use bool $orEqual = true 
+$where=WhereQuery::instance()->greatThan('wallet',5);
+
+//first argument is selectable table and second argument is where
+//SELECT id , name , wallet FROM user_table WHERE wallet > 5 
+/** @var  $user UserTable */
+$user=get(new UserTable(),$where);
+
+
+/** if you want to delete or update or insert or ...
+
+$user->name='Hadi Dadkhah';
+$user->wallet=313;
+update($user);
+delete($user);
+insert($user);
+ 
+*/
+
+?>
+```
+
+####Example 2: Get user if (name like %h or %h% or ...)
+```php
+<?php
+require_once 'StarOfLife.php';
+start("dbName", "userName", "password");
+
+/** @TABLE(user_table) */
+class UserTable extends DataModel
+{
+    
+    //user name
+    public $name;
+    
+    //user wallet
+    public $wallet;
+
+}
+
+$where=WhereQuery::instance()->like('name','%h');
+
+//first argument is selectable table and second argument is where
+//SELECT id , name , wallet FROM user_table WHERE name LIKE '%h'
+/** @var  $user UserTable */
+$user=get(new UserTable(),$where);
+
+
+/** if you want to delete or update or insert or ...
+
+$user->name='Hadi Dadkhah';
+$user->wallet=313;
+update($user);
+delete($user);
+insert($user);
+ 
+*/
+
+?>
+```
