@@ -629,7 +629,7 @@ $data=query("SELECT * FROM user_table WHERE id > :i AND name= :n ",[':i'=>5,':n'
 ?>
 ```
 
-# How to check GET and POST inputs (Suitable for api)
+# How to check GET and POST and HEADER inputs (Suitable for api)
 
 ### Check get inputs and post inputs
 
@@ -657,5 +657,34 @@ if(checkGetInputs(['name','last_name'],true,false)){
 
 ?>
 ```
+# How to create random token 
+```php
+<?php
+require_once 'StarOfLife.php';
+start("dbName", "userName", "password");
+
+//simple random
+$r1=randomHash();
+//random hash with custom band and custom length
+$r2=randomHash("A-Z,a-z,0-9",128);
+
+
+//random hash with random band
+/** randoms n^n 3^3=27
+ * 111 , 222 , 333
+ * 112 , 121 , 211
+ * 113 , 131 , 311
+ * 221 , 212 , 122
+ * 311 , 313 , 113
+ * 332 , 323 , 233
+ * 223 , 232 , 322
+ * 123 , 132 , 321
+ * 312 , 231 , 213
+ */
+$r3=randomHashWithBand("123",3);
+
+?>
+```
+
 
 
