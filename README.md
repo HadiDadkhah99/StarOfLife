@@ -515,6 +515,7 @@ $users=getAll(new UserTable(),$where);
 ```
 
 #### Example 7: Get users paginated
+
 ```php
 <?php
 require_once 'StarOfLife.php';
@@ -547,4 +548,73 @@ $users=getAll(new UserTable(),$where);
 
 ?>
 ```
+
+#### Example 7: join to another table
+
+```php
+<?php
+require_once 'StarOfLife.php';
+start("dbName", "userName", "password");
+
+/** @TABLE(user_table) */
+class UserTable extends DataModel
+{
+    
+    //user name
+    public $name;
+    
+    //user wallet
+    public $wallet;
+
+}
+/** @TABLE(image_table) */
+class ImageTable extends DataModel
+{
+    
+    //image name
+    public $image_name;
+    
+    //foreign key --> user table 
+    public $for_user;
+    
+
+}
+
+class ResultData extends DataModel
+{
+    
+    //user name
+    /** @COLUMN(user_table.name) */
+    public $name;
+    
+    //user wallet
+    /** @COLUMN(user_table.wallet) */
+    public $wallet;
+    
+    //image name
+    /** @COLUMN(image_table.image_name) */
+    public $image_name;
+    
+    /** @COLUMN(image_table.for_user) */
+    public $for_user;
+
+}
+
+
+//SELECT user_table.* , image_table.* FROM user_table JOIN image_table ON image_table.for_user=user_table.id LIMIT 2
+$where=WhereQuery::instance()
+        ->join(new ImageTable())
+        ->onEqual('image_table.for_user','user_table.id')
+        ->commitJoin()
+        ->limit(2);
+        //... any where
+       
+/** @var  $users UserTable */
+$users=getAll(new UserTable(),$where,new ResultData());
+
+
+
+?>
+```
+
 
