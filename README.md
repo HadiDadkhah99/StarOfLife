@@ -371,7 +371,7 @@ insert($user);
 ?>
 ```
 
-#### Example 2: Get user if (name like %h or %h% or ...)
+#### Example 3: Get user if (name like %h or %h% or ...)
 
 ```php
 <?php
@@ -411,7 +411,7 @@ insert($user);
 ?>
 ```
 
-#### Example 2: Get users with limit
+#### Example 4: Get users with limit
 
 ```php
 <?php
@@ -442,7 +442,7 @@ $users=getAll(new UserTable(),$where);
 ?>
 ```
 
-#### Example 2: Order users
+#### Example 5: Order users
 
 ```php
 <?php
@@ -477,3 +477,37 @@ $users=getAll(new UserTable(),$where);
 ?>
 ```
 
+#### Example 6: Get users paginated
+
+```php
+<?php
+require_once 'StarOfLife.php';
+start("dbName", "userName", "password");
+
+/** @TABLE(user_table) */
+class UserTable extends DataModel
+{
+    
+    //user name
+    public $name;
+    
+    //user wallet
+    public $wallet;
+
+}
+
+$where=WhereQuery::instance()
+        /**
+         *... any where 
+         */
+        ->page(1,10);
+        // 1 == page number 
+        // 10 == items in per page
+
+/** @var  $users UserTable */
+$users=getAll(new UserTable(),$where);
+
+
+
+?>
+```
