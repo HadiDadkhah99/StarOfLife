@@ -617,6 +617,18 @@ $users=getAll(new UserTable(),$where,new ResultData());
 ?>
 ```
 
+### Custom query :)
+```php
+<?php
+require_once 'StarOfLife.php';
+start("dbName", "userName", "password");
+
+/** @var  $data array */
+$data=query("SELECT * FROM user_table WHERE id > :i AND name= :n ",[':i'=>5,':n'=>'hadi']);
+
+?>
+```
+
 # How to check GET and POST inputs (Suitable for api)
 
 ### Check get inputs and post inputs
