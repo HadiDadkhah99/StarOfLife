@@ -1,4 +1,5 @@
 # StarOfLife
+
 The mini php frame work for api
 
 ## At the first you need add Main file on your project:
@@ -6,13 +7,17 @@ The mini php frame work for api
 ```php
 require_once 'StarOfLife.php';
 ```
+
 Then start frame work with:
+
 ```php
 start("dbName", "userName", "password");
 ```
 
 ### #Insert new Data on DataBase
+
 For insert new data you have to create class that extends of (DataModel) and Have the same name with DataBase table
+
 ```php
 <?php 
 require_once 'StarOfLife.php';
@@ -35,11 +40,12 @@ insert($user);
 ?>
 ```
 
-
 ### #Update Data on DataBase
+
 For update data you have to create class that extends of (DataModel) and Have the same name with DataBase table
 <br>
 **default Primary key is $id in DataModel**
+
 ```php
 <?php 
 require_once 'StarOfLife.php';
@@ -63,9 +69,11 @@ update($user);
 ```
 
 ### #Delete Data from DataBase
+
 For delete data you have to create class that extends of (DataModel) and Have the same name with DataBase table
 <br>
 **default Primary key is $id in DataModel**
+
 ```php
 <?php 
 require_once 'StarOfLife.php';
@@ -87,12 +95,14 @@ delete($user);
 ```
 
 ### #Get Data from DataBase
+
 For delete data you have to create class that extends of (DataModel) and Have the same name with DataBase table
 <br>
 **default Primary key is $id in DataModel**
 <br>
 <br>
 ** Get Special data **
+
 ```php
 <?php 
 require_once 'StarOfLife.php';
@@ -118,7 +128,9 @@ echo json_encode($data, JSON_UNESCAPED_UNICODE);
 
 ?>
 ```
+
 ** Get All data **
+
 ```php
 <?php 
 require_once 'StarOfLife.php';
@@ -143,9 +155,11 @@ echo json_encode($data, JSON_UNESCAPED_UNICODE);
 
 ?>
 ```
+
 <br>
 
-### If the class and table names are not the same , use this annotation : 
+### If the class and table names are not the same , use this annotation :
+
 ```php
 <?php 
 
@@ -157,7 +171,9 @@ class UserTable extends DataModel
  //...
 }
 ```
+
 ### If the property and column names are not the same , use this annotation :
+
 ```php
 <?php 
 
@@ -173,7 +189,9 @@ class UserTable extends DataModel
 # How to use where query ?
 
 ### Get all data with custom ``` where ```
+
 ** Get All data **
+
 ```php
 <?php 
 require_once 'StarOfLife.php';
@@ -204,12 +222,10 @@ echo json_encode($data, JSON_UNESCAPED_UNICODE);
 ?>
 ```
 
-
-
-
 # If you have another Primary Key try this way
 
 **Update**
+
 ```php
 <?php
 require_once 'StarOfLife.php';
@@ -242,6 +258,7 @@ update($user);
 ```
 
 **Delete**
+
 ```php
 <?php
 require_once 'StarOfLife.php';
@@ -271,10 +288,9 @@ delete($user);
 ?>
 ```
 
-##How use where query ?
+## How use where query ?
 
-####Example 1: Get user if (name == hadi)
-
+#### Example 1: Get user if (name == hadi)
 
 ```php
 <?php
@@ -314,7 +330,8 @@ insert($user);
 ?>
 ```
 
-####Example 2: Get user if (wallet > 5)
+#### Example 2: Get user if (wallet > 5)
+
 ```php
 <?php
 require_once 'StarOfLife.php';
@@ -354,7 +371,8 @@ insert($user);
 ?>
 ```
 
-####Example 2: Get user if (name like %h or %h% or ...)
+#### Example 2: Get user if (name like %h or %h% or ...)
+
 ```php
 <?php
 require_once 'StarOfLife.php';
@@ -392,3 +410,70 @@ insert($user);
 
 ?>
 ```
+
+#### Example 2: Get users with limit
+
+```php
+<?php
+require_once 'StarOfLife.php';
+start("dbName", "userName", "password");
+
+/** @TABLE(user_table) */
+class UserTable extends DataModel
+{
+    
+    //user name
+    public $name;
+    
+    //user wallet
+    public $wallet;
+
+}
+
+$where=WhereQuery::instance()->limit(5);
+
+//first argument is selectable table and second argument is where
+//SELECT id , name , wallet FROM user_table LIMIT 5
+/** @var  $users UserTable */
+$users=getAll(new UserTable(),$where);
+
+
+
+?>
+```
+
+#### Example 2: Order users
+
+```php
+<?php
+require_once 'StarOfLife.php';
+start("dbName", "userName", "password");
+
+/** @TABLE(user_table) */
+class UserTable extends DataModel
+{
+    
+    //user name
+    public $name;
+    
+    //user wallet
+    public $wallet;
+
+}
+
+$where=WhereQuery::instance()
+        ->equal('name','hadi')
+        ->and()
+        ->greatThan('id',2)
+        ->orderBy('id',true);
+
+//first argument is selectable table and second argument is where
+//SELECT id , name , wallet FROM user_table WHERE name='hadi' and id=2 ORDER BY id ASC
+/** @var  $users UserTable */
+$users=getAll(new UserTable(),$where);
+
+
+
+?>
+```
+
