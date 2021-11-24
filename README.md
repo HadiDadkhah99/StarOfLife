@@ -477,8 +477,44 @@ $users=getAll(new UserTable(),$where);
 ?>
 ```
 
-#### Example 6: Get users paginated
+#### Example 6: Custom order
 
+```php
+<?php
+require_once 'StarOfLife.php';
+start("dbName", "userName", "password");
+
+/** @TABLE(user_table) */
+class UserTable extends DataModel
+{
+    
+    //user name
+    public $name;
+    
+    //user wallet
+    public $wallet;
+    
+    //user status
+    public $status;
+
+}
+
+$where=WhereQuery::instance()
+        ->equal('name','hadi')
+        ->and()
+        ->greatThan('id',2)
+        ->customOrderBy("ORDER BY CASE status WHEN 'ENABLED' THEN 1 WHEN 'DISABLED' THEN 2 ELSE 3 END ASC");
+
+//first argument is selectable table and second argument is where
+/** @var  $users UserTable */
+$users=getAll(new UserTable(),$where);
+
+
+
+?>
+```
+
+#### Example 7: Get users paginated
 ```php
 <?php
 require_once 'StarOfLife.php';
@@ -511,3 +547,4 @@ $users=getAll(new UserTable(),$where);
 
 ?>
 ```
+
