@@ -617,4 +617,33 @@ $users=getAll(new UserTable(),$where,new ResultData());
 ?>
 ```
 
+# How to check GET and POST inputs (Suitable for api)
+
+### Check get inputs and post inputs
+
+```php
+<?php
+require_once 'StarOfLife.php';
+start("dbName", "userName", "password");
+
+/**
+ * First argument is GET,POST,HEADER inputs that will be checked $_GET['name'] , $_GET['last_name'] , $_POST[...] , HEADER[...]
+ * Second argument (true) to check if the inputs are empty (if empty die and show message)
+ * Third argument (true) is forced to stop in case of problems
+ * return data is bool --> ( if == true no problem else there are problems )
+ */
+checkGetInputs(['name','last_name'],true,true);
+checkPostInputs(['name','last_name'],true,true);
+checkHeaderInputs(['name','last_name'],true,true);
+
+//If you set third argument to false use must check it in (if)
+if(checkGetInputs(['name','last_name'],true,false)){
+//do some thing
+}else{
+//show error
+}
+
+?>
+```
+
 

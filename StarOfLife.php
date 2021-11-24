@@ -13,9 +13,9 @@ $dataBase = null;
 /**
  * Check inputs of GET request
  */
-function checkGetInputs(array $inputs, bool $checkEmptyValue = true, bool $printErr = true): void
+function checkGetInputs(array $inputs, bool $checkEmptyValue = true, bool $printErr = true): ?bool
 {
-    RequestChecker::checkGetInputs($inputs, $checkEmptyValue, $printErr);
+    return RequestChecker::checkGetInputs($inputs, $checkEmptyValue, $printErr);
 }
 
 /**
@@ -30,9 +30,9 @@ function checkPostInputs(array $inputs, bool $checkEmptyValue = true, bool $prin
 /**
  * Check inputs of Header
  */
-function checkHeaderInputs(array $inputs, bool $checkEmptyValue = true, bool $printErr = true): void
+function checkHeaderInputs(array $inputs, bool $checkEmptyValue = true, bool $printErr = true): ?bool
 {
-    RequestChecker::checkHeaderInputs($inputs, $checkEmptyValue, $printErr);
+    return RequestChecker::checkHeaderInputs($inputs, $checkEmptyValue, $printErr);
 }
 
 /**
@@ -139,7 +139,6 @@ function dataCount(DataModel $dataModel, string $columnName, WhereQuery $whereQu
     return $dataBase->rowCount($dataModel, $columnName, $whereQuery);
 
 }
-
 
 
 /**
