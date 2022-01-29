@@ -211,7 +211,7 @@ class WhereQuery
     {
         //control
         $this->controller->orderByControl();
-        $this->whereQuery .= " $orderBy ";
+        $this->whereQuery .= " ORDER BY $orderBy ";
         return $this;
     }
 
