@@ -252,6 +252,7 @@ class DataBaseManager
         $statement = $this->pdo->prepare("SELECT {$this->dataBaseHelper->getSelectionQuery($dataModel,$whereQuery)} FROM {$dataModel->getTableName()} $where");
 
 
+
         //set where vars
         if (!empty($whereQuery)) {
             foreach ($whereQuery->getVars() as $key => &$var)

@@ -98,6 +98,25 @@ class DataModel
 
 
     /**
+     * Get sum value of var
+     * @param string $varName
+     * @return string|null
+     * @throws ReflectionException
+     */
+    public function getSumValue(string $varName): ?string
+    {
+
+        $r = new ReflectionProperty($this, $varName);
+
+        if (is_string($annotation = $r->getDocComment()) and strpos($annotation, Annotation::SUM))
+            return $this->getAnnotationValue($annotation, Annotation::SUM);
+
+        return null;
+    }
+
+
+
+    /**
      * Get Table name
      * @return string
      */

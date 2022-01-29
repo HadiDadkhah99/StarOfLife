@@ -71,9 +71,11 @@ class JoinQueryHelper
      * @param $value mixed
      * @throws Exception
      */
-    public function onNotEqual(string $var, $value): void
+    public function onNotEqual(string $var, $value): JoinQueryHelper
     {
         $this->onEqual($var, $value, true);
+
+        return $this;
     }
 
     /**

@@ -197,7 +197,12 @@ class DataBaseHelper
                 $comma = empty($res) ? '' : ',';
 
                 //check CONCAT
-                $column = empty($this->checkConcat($dataModel, $key)) ? $column : "{$this->checkConcat($dataModel, $key)}";
+                if (!empty($this->checkConcat($dataModel, $key)))
+                    $column = "{$this->checkConcat($dataModel, $key)}";
+                //check SUM
+                elseif (!empty($this->checkSum($dataModel, $key)))
+                    $column = "{$this->checkSum($dataModel, $key)}";
+
 
 
 
@@ -286,20 +291,26 @@ class DataBaseHelper
     {
 
 
-        switch ($key) {
+        if (strpos($dataModel->varAnnotation($key), Annotation::CONCAT) || strpos($dataModel->varAnnotation($key), Annotation::LEFT_CONCAT))
+            return "CONCAT(\"{$dataModel->getConcatValue($key)}\",{$dataModel->getTableName()}.$key)";
+        elseif (strpos($dataModel->varAnnotation($key), Annotation::RIGHT_CONCAT))
+            return "CONCAT(\"{$dataModel->getTableName()}.$key\",{$dataModel->getConcatValue($key)})";
 
-            case strpos($dataModel->varAnnotation($key), Annotation::CONCAT) ||
-                strpos($dataModel->varAnnotation($key), Annotation::LEFT_CONCAT):
-                return "CONCAT(\"{$dataModel->getConcatValue($key)}\",{$dataModel->getTableName()}.$key)";
+        return null;
 
-            case strpos($dataModel->varAnnotation($key), Annotation::RIGHT_CONCAT):
-                return "CONCAT(\"{$dataModel->getTableName()}.$key\",{$dataModel->getConcatValue($key)})";
-
-            default:
-                return null;
-        }
 
     }
+
+    private function checkSum(DataModel $dataModel, string $key): ?string
+    {
+
+        if (strpos($dataModel->varAnnotation($key), Annotation::SUM))
+            return "SUM({$dataModel->getTableName()}.$key)";
+
+        return null;
+
+    }
+
 
     private function checkCount(DataModel $dataModel, string $key): ?string
     {
