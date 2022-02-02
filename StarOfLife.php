@@ -200,6 +200,8 @@ function searchInDataModel(array $array, string $propertyName, $search): array
     $res = [];
 
 
+    $index = 0;
+
     /** @var  $item DataModel */
     foreach ($array as $item) {
 
@@ -211,8 +213,9 @@ function searchInDataModel(array $array, string $propertyName, $search): array
             throw new Exception("This property is not exist!");
 
         if ($item->getVar($propertyName) == $search)
-            $res[] = $item;
+            $res["$index"] = $item;
 
+        $index++;
     }
 
     return $res;
@@ -242,17 +245,14 @@ function sortOnDataModel(array $array, string $propertyName, bool $asc = true): 
             if (!$item instanceof DataModel)
                 throw new Exception("This array is not a type of DataModel array!");
 
-            if (empty($item->getVar($propertyName)))
-                throw new Exception("This property is not exist!");
 
 
-            if($asc) {
+            if ($asc) {
                 if (intval($item->getVar($propertyName)) < intval($pivot->getVar($propertyName)))
                     $left[] = $item;
                 else
                     $right[] = $item;
-            }
-            else{
+            } else {
                 if (intval($item->getVar($propertyName)) > intval($pivot->getVar($propertyName)))
                     $left[] = $item;
                 else
