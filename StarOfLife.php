@@ -1,5 +1,6 @@
 <?php
 require_once dirname(__DIR__) . '/StarOfLife/util/Annotation.php';
+require_once dirname(__DIR__) . '/StarOfLife/util/Helper.php';
 require_once dirname(__DIR__) . '/StarOfLife/model/DataModel.php';
 require_once dirname(__DIR__) . '/StarOfLife/query/WhereQuery.php';
 require_once dirname(__DIR__) . '/StarOfLife/request/RequestChecker.php';
