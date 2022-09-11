@@ -165,6 +165,13 @@ class WhereQuery
         return $this;
     }
 
+    public function open(): WhereQuery
+    {
+        $this->whereQuery .= " ( ";
+
+        return $this;
+    }
+
     public function close(): WhereQuery
     {
         $this->whereQuery .= " ) ";
@@ -204,7 +211,7 @@ class WhereQuery
     {
         //control
         $this->controller->orderByControl();
-        $this->whereQuery .= " $orderBy ";
+        $this->whereQuery .= " ORDER BY $orderBy ";
         return $this;
     }
 

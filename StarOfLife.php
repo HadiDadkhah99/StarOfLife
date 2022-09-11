@@ -190,6 +190,81 @@ function randomHashWithBand(string $band = '', int $length = 32): string
     return $hash->randomHash();
 }
 
+
+/**
+ * For search in DataModel array ;)
+ * @throws Exception
+ */
+function searchInDataModel(array $array, string $propertyName, $search): array
+{
+    $res = [];
+
+
+    $index = 0;
+
+    /** @var  $item DataModel */
+    foreach ($array as $item) {
+
+        if (!$item instanceof DataModel)
+            throw new Exception("This array is not a type of DataModel array!");
+
+
+        if (empty($item->getVar($propertyName)))
+            throw new Exception("This property is not exist!");
+
+        if ($item->getVar($propertyName) == $search)
+            $res["$index"] = $item;
+
+        $index++;
+    }
+
+    return $res;
+
+}
+
+/**
+ * For sort array of DataModel
+ * @throws Exception
+ */
+function sortOnDataModel(array $array, string $propertyName, bool $asc = true): array
+{
+    if (count($array) <= 1)
+        return $array;
+    else {
+        /** @var  $pivot DataModel */
+        $pivot = $array[0];
+        if (!$pivot instanceof DataModel)
+            throw new Exception("This array is not a type of DataModel array!");
+
+        $left = array();
+        $right = array();
+        for ($i = 1; $i < count($array); $i++) {
+
+            /** @var  $item DataModel */
+            $item = $array[$i];
+            if (!$item instanceof DataModel)
+                throw new Exception("This array is not a type of DataModel array!");
+
+
+
+            if ($asc) {
+                if (intval($item->getVar($propertyName)) < intval($pivot->getVar($propertyName)))
+                    $left[] = $item;
+                else
+                    $right[] = $item;
+            } else {
+                if (intval($item->getVar($propertyName)) > intval($pivot->getVar($propertyName)))
+                    $left[] = $item;
+                else
+                    $right[] = $item;
+            }
+
+        }
+        return array_merge(sortOnDataModel($left, $propertyName, $asc), array($pivot), sortOnDataModel($right, $propertyName, $asc));
+    }
+}
+
+
 /**
  * @param string $dbName
  * @param string $userName
