@@ -80,7 +80,6 @@ class DataBaseManager
         $res = $statement->fetch(PDO::FETCH_ASSOC);
 
 
-
         return is_array($res) ? intval($res['row_count']) : 0;
     }
 
@@ -238,6 +237,7 @@ class DataBaseManager
     /**
      * Get all data
      * The returned data is array of DataModel (if data is not in DataBase so the returned data is null)
+     * @throws Exception
      */
     public function getAll(DataModel $dataModel, DataModel $returnModel, WhereQuery $whereQuery = null): array
     {
@@ -252,7 +252,6 @@ class DataBaseManager
         $statement = $this->pdo->prepare("SELECT {$this->dataBaseHelper->getSelectionQuery($dataModel,$whereQuery)} FROM {$dataModel->getTableName()} $where");
 
 
-
         //set where vars
         if (!empty($whereQuery)) {
             foreach ($whereQuery->getVars() as $key => &$var)
@@ -260,9 +259,18 @@ class DataBaseManager
         }
 
 
+        try {
+            //run query
+            $statement->execute();
+        } catch (Exception $e) {
+            echo $e->getMessage();
+            echo "<br><br>";
+            echo $statement->queryString;
+            echo "<br><br>";
+            throw new Exception($e);
+        }
 
-        //run query
-        $statement->execute();
+
         //get all data
         $data = $statement->fetchAll(PDO::FETCH_ASSOC);
 

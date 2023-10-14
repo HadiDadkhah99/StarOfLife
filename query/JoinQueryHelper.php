@@ -138,6 +138,52 @@ class JoinQueryHelper
         return $this;
     }
 
+    public function openAnd(): JoinQueryHelper
+    {
+
+
+        $this->joinQuery .= " AND ( ";
+
+        return $this;
+    }
+
+    public function or(): JoinQueryHelper
+    {
+
+
+        $this->joinQuery .= " OR ";
+
+        return $this;
+    }
+
+    public function openOr(): JoinQueryHelper
+    {
+
+
+        $this->joinQuery .= " OR ( ";
+
+        return $this;
+    }
+
+
+    public function open(): JoinQueryHelper
+    {
+
+
+        $this->joinQuery .= " ( ";
+
+        return $this;
+    }
+
+    public function close(): JoinQueryHelper
+    {
+
+
+        $this->joinQuery .= " ) ";
+
+        return $this;
+    }
+
 
     /**
      * @throws Exception
@@ -148,6 +194,7 @@ class JoinQueryHelper
             throw new Exception("Err in join query: You must set at last one check statement like ( onEqual() )");
 
         $this->whereQuery->setWhereQuery($this->joinQuery . $this->whereQuery->getWhereQuery());
+
 
         return $this->whereQuery;
     }

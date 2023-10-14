@@ -265,6 +265,8 @@ class WhereQuery
      */
     public function join(DataModel $dataModel, string $as = null): JoinQueryHelper
     {
+
+
         return $this->joinQueryHelper->join($dataModel, $as);
     }
 
